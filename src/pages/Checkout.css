@@ -1,0 +1,35 @@
+.checkout {
+  padding: 56px 24px 80px;
+  max-width: 480px;
+}
+
+.checkout h1 {
+  font-size: 28px;
+  margin-bottom: 32px;
+}
+
+.checkout-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.checkout-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  margin: 12px 0 20px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.checkout-note {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.checkout-form .btn {
+  width: 100%;
+}

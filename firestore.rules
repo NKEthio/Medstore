@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Anyone can read the product catalog; only edit it from the
+    // Firebase console or a trusted admin tool (not from the client).
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // A signed-in user can create orders for themselves and read
+    // only their own orders. Orders can't be edited or deleted
+    // from the client once placed.
+    match /orders/{orderId} {
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid;
+      allow read: if request.auth != null
+                  && resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+  }
+}

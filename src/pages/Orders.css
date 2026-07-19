@@ -1,0 +1,47 @@
+.orders {
+  padding: 56px 24px 80px;
+  max-width: 680px;
+}
+
+.orders h1 {
+  font-size: 28px;
+  margin-bottom: 32px;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-card {
+  border: 1px solid var(--line);
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.order-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-total {
+  font-family: var(--font-display);
+  font-size: 16px;
+}

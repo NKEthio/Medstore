@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Canvas Tote",
+    "price": 38,
+    "category": "Bags",
+    "description": "Heavy cotton canvas tote with reinforced handles. Fits a laptop, a notebook, and the rest of your day.",
+    "image": "https://images.unsplash.com/photo-1622560481156-01a35fdb0c5a?w=800"
+  },
+  {
+    "name": "Ceramic Mug",
+    "price": 22,
+    "category": "Home",
+    "description": "Hand-thrown stoneware mug in a matte glaze. Holds 12oz, safe for the dishwasher and microwave.",
+    "image": "https://images.unsplash.com/photo-1517914309068-e9dcd8f2fd0e?w=800"
+  },
+  {
+    "name": "Wool Throw",
+    "price": 96,
+    "category": "Home",
+    "description": "Lambswool throw, woven in a small mill. Warm without the bulk, finished with a whipped edge.",
+    "image": "https://images.unsplash.com/photo-1600369672770-985fd30004eb?w=800"
+  },
+  {
+    "name": "Notebook, Ruled",
+    "price": 16,
+    "category": "Paper",
+    "description": "A5 notebook with a stitched spine and 160 pages of 100gsm paper that takes fountain pen ink well.",
+    "image": "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=800"
+  }
+]
