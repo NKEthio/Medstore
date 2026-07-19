@@ -17,7 +17,7 @@ a store needs: a catalog, a cart, sign-in, and checkout.
 
 ```
 src/
-  lib/firebase.js       Firebase app init — put your config here
+  lib/firebase.js       Firebase app init — reads config from env vars
   context/
     AuthContext.jsx      current user, login/signup/logout
     CartContext.jsx       cart items, persisted to localStorage
@@ -37,8 +37,9 @@ sample-products.json      a few sample documents for the products collection
 ## 1. Set up Firebase
 
 1. Create a project at https://console.firebase.google.com
-2. Add a **Web app** (the `</>` icon) and copy the config object it gives you.
-3. Paste those values into `src/lib/firebase.js`, replacing the placeholders.
+2. Add a **Web app** (the `</>` icon) and copy the config values it gives you.
+3. Copy `.env.example` to `.env`, then fill in each `VITE_FIREBASE_*` value from
+   your Firebase config.
 4. In the console, enable:
    - **Authentication -> Sign-in method -> Email/Password**
    - **Firestore Database** (start in production mode)
