@@ -11,12 +11,27 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
-      setLoading(false);
+      if (!u) {
+        setIsAdmin(false);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const token = await u.getIdTokenResult(true);
+        setIsAdmin(Boolean(token.claims.admin));
+      } catch (err) {
+        console.error("Failed to read auth token claims", err);
+        setIsAdmin(false);
+      } finally {
+        setLoading(false);
+      }
     });
     return unsub;
   }, []);
@@ -30,7 +45,9 @@ export function AuthProvider({ children }) {
   const logout = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signup, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAdmin, loading, signup, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

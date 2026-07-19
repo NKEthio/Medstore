@@ -18,6 +18,22 @@
   padding: 40px 0;
 }
 
+.home-controls {
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+}
+
+.home-controls input,
+.home-controls select {
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 14px;
+}
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -27,6 +43,10 @@
 @media (max-width: 900px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .home-controls {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -2,11 +2,16 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Anyone can read the product catalog; only edit it from the
-    // Firebase console or a trusted admin tool (not from the client).
+    function isAdmin() {
+      return request.auth != null
+             && request.auth.token.admin == true;
+    }
+
+    // Anyone can read the product catalog; users with the admin custom claim
+    // can create, edit, and delete products from the admin route.
     match /products/{productId} {
       allow read: if true;
-      allow write: if false;
+      allow create, update, delete: if isAdmin();
     }
 
     // A signed-in user can create orders for themselves and read

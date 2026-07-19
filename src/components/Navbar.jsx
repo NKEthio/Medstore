@@ -4,7 +4,7 @@ import { useCart } from "../context/CartContext";
 import "./Navbar.css";
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const { count } = useCart();
   const navigate = useNavigate();
 
@@ -16,9 +16,9 @@ export default function Navbar() {
         </Link>
 
         <nav className="nav-links">
-        {/*<Link to="/">Shop</Link>*/}
           {user ? (
             <>
+              {isAdmin && <Link to="/admin">Admin</Link>}
               <Link to="/orders">Orders</Link>
               <button
                 className="nav-link-btn"
