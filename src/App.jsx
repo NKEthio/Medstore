@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
@@ -8,6 +9,9 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Orders from "./pages/Orders";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminProductForm from "./pages/AdminProductForm";
+import AdminOrders from "./pages/AdminOrders";
 
 export default function App() {
   return (
@@ -27,6 +31,38 @@ export default function App() {
               <ProtectedRoute>
                 <Orders />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/product/new"
+            element={
+              <AdminRoute>
+                <AdminProductForm />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/product/:id/edit"
+            element={
+              <AdminRoute>
+                <AdminProductForm />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/orders"
+            element={
+              <AdminRoute>
+                <AdminOrders />
+              </AdminRoute>
             }
           />
         </Routes>

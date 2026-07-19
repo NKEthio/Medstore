@@ -2,22 +2,58 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Anyone can read the product catalog; only edit it from the
-    // Firebase console or a trusted admin tool (not from the client).
+    // Helper function to check if the user is an admin.
+    // Checks for request.auth.token.admin == true (custom claim)
+    // or request.auth.token.role == "admin" (role claim)
+    // or if a document exists in /users/{uid} with field role == "admin"
+    // or fallback admin emails configured via rules.
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.admin == true ||
+        request.auth.token.role == "admin" ||
+        request.auth.token.email == "admin@medstore.com" ||
+        request.auth.token.email == "admin@example.com" ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin")
+      );
+    }
+
+    // Anyone can read the product catalog; admins can write/delete/update.
     match /products/{productId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if isAdmin();
     }
 
     // A signed-in user can create orders for themselves and read
-    // only their own orders. Orders can't be edited or deleted
-    // from the client once placed.
+    // only their own orders.
+    // Admins can read, update, or delete all orders (e.g. to change status, manage order).
     match /orders/{orderId} {
       allow create: if request.auth != null
                     && request.resource.data.userId == request.auth.uid;
       allow read: if request.auth != null
-                  && resource.data.userId == request.auth.uid;
-      allow update, delete: if false;
+                  && (resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // User profile documents
+    // Prevent non-admin users from escalating their role to "admin"
+    match /users/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow create: if request.auth != null && request.auth.uid == userId && (
+        !request.resource.data.keys().hasAll(['role']) ||
+        request.resource.data.role == 'user' ||
+        request.auth.token.email == "admin@medstore.com" ||
+        request.auth.token.email == "admin@example.com"
+      );
+      allow update: if request.auth != null && (
+        isAdmin() ||
+        (request.auth.uid == userId && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) ||
+          resource.data.role == request.resource.data.role
+        ))
+      );
+      allow delete: if isAdmin();
     }
   }
 }
