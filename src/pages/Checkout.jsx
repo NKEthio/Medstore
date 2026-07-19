@@ -64,20 +64,20 @@ export default function Checkout() {
       <form className="checkout-form" onSubmit={placeOrder}>
         <div className="field">
           <label htmlFor="name">Full name</label>
-          <input id="name" required value={form.name} onChange={update("name")} />
+          <input id="name" required autoComplete="name" value={form.name} onChange={update("name")} />
         </div>
         <div className="field">
           <label htmlFor="address">Address</label>
-          <input id="address" required value={form.address} onChange={update("address")} />
+          <input id="address" required autoComplete="address-line1" value={form.address} onChange={update("address")} />
         </div>
         <div className="checkout-row">
           <div className="field">
             <label htmlFor="city">City</label>
-            <input id="city" required value={form.city} onChange={update("city")} />
+            <input id="city" required autoComplete="address-level2" value={form.city} onChange={update("city")} />
           </div>
           <div className="field">
             <label htmlFor="postcode">Postcode</label>
-            <input id="postcode" required value={form.postcode} onChange={update("postcode")} />
+            <input id="postcode" required autoComplete="postal-code" value={form.postcode} onChange={update("postcode")} />
           </div>
         </div>
 

@@ -35,7 +35,19 @@ export default function Home() {
         <h1>Considered goods for everyday use.</h1>
       </div>
 
-      {status === "loading" && <p className="home-state">Loading products…</p>}
+      {status === "loading" && (
+        <div className="product-grid skeleton-grid">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="skeleton-card">
+              <div className="skeleton-image pulse"></div>
+              <div className="skeleton-meta">
+                <div className="skeleton-title pulse"></div>
+                <div className="skeleton-price pulse"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {status === "error" && (
         <p className="home-state error-text">

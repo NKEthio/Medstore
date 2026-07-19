@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import "./Navbar.css";
@@ -16,17 +16,17 @@ export default function Navbar() {
         </Link>
 
         <nav className="nav-links">
-        {/*<Link to="/">Shop</Link>*/}
+        {/*<NavLink to="/" end className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Shop</NavLink>*/}
           {isAdmin && (
-            <Link to="/admin" className="nav-admin-link">
+            <NavLink to="/admin" className={({ isActive }) => isActive ? "nav-link active nav-admin-link" : "nav-link nav-admin-link"}>
               Admin
-            </Link>
+            </NavLink>
           )}
           {user ? (
             <>
-              <Link to="/orders">Orders</Link>
+              <NavLink to="/orders" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Orders</NavLink>
               <button
-                className="nav-link-btn"
+                className="nav-link nav-link-btn"
                 onClick={async () => {
                   await logout();
                   navigate("/");
@@ -36,11 +36,14 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <Link to="/login">Sign in</Link>
+            <NavLink to="/login" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Sign in</NavLink>
           )}
-          <Link to="/cart" className="nav-cart">
-            Cart{count > 0 ? ` (${count})` : ""}
-          </Link>
+          <NavLink to="/cart" className={({ isActive }) => isActive ? "nav-link active nav-cart" : "nav-link nav-cart"}>
+            Cart
+            <span key={count} className={count > 0 ? "cart-badge animated" : "cart-badge"}>
+              {count > 0 ? ` (${count})` : ""}
+            </span>
+          </NavLink>
         </nav>
       </div>
     </header>
