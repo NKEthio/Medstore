@@ -24,6 +24,56 @@
   gap: 32px 24px;
 }
 
+/* Skeleton Screens */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-image {
+  aspect-ratio: 4 / 5;
+  background-color: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.skeleton-meta {
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.skeleton-title {
+  height: 16px;
+  width: 60%;
+  background-color: var(--line);
+  border-radius: var(--radius);
+}
+
+.skeleton-price {
+  height: 16px;
+  width: 25%;
+  background-color: var(--line);
+  border-radius: var(--radius);
+}
+
+.pulse {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
 @media (max-width: 900px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr);

@@ -65,6 +65,71 @@
   font-size: 14px;
 }
 
+/* Skeletons */
+.skeleton-detail .skeleton-eyebrow {
+  height: 14px;
+  width: 80px;
+  background-color: var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+}
+
+.skeleton-detail .skeleton-h1 {
+  height: 36px;
+  width: 250px;
+  background-color: var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+
+.skeleton-detail .skeleton-price {
+  height: 22px;
+  width: 100px;
+  background-color: var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+}
+
+.skeleton-detail .skeleton-desc {
+  height: 120px;
+  width: 100%;
+  max-width: 46ch;
+  background-color: var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 32px;
+}
+
+.skeleton-detail .skeleton-qty {
+  height: 40px;
+  width: 120px;
+  background-color: var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+}
+
+.skeleton-detail .skeleton-btn {
+  height: 44px;
+  width: 140px;
+  background-color: var(--line);
+  border-radius: var(--radius);
+}
+
+.pulse {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
 @media (max-width: 760px) {
   .product-detail {
     grid-template-columns: 1fr;

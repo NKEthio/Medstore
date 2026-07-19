@@ -88,6 +88,41 @@
   width: 100%;
 }
 
+/* Polished Empty States */
+.cart-empty-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.cart-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 380px;
+}
+
+.cart-empty-icon {
+  width: 64px;
+  height: 64px;
+  stroke: var(--muted);
+  margin-bottom: 20px;
+}
+
+.cart-empty-content h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.cart-empty-content p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 @media (max-width: 560px) {
   .cart-row {
     grid-template-columns: 48px 1fr auto;

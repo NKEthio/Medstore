@@ -40,7 +40,19 @@ export default function ProductDetail() {
   }, [id]);
 
   if (status === "loading") {
-    return <p className="container home-state">Loading…</p>;
+    return (
+      <div className="container product-detail skeleton-detail">
+        <div className="product-detail-image skeleton-image pulse" aria-hidden="true"></div>
+        <div className="product-detail-info">
+          <div className="skeleton-eyebrow pulse"></div>
+          <div className="skeleton-h1 pulse"></div>
+          <div className="skeleton-price pulse"></div>
+          <div className="skeleton-desc pulse"></div>
+          <div className="skeleton-qty pulse"></div>
+          <div className="skeleton-btn pulse"></div>
+        </div>
+      </div>
+    );
   }
 
   if (status === "missing" || status === "error") {
@@ -76,6 +88,7 @@ export default function ProductDetail() {
             id="qty"
             type="number"
             min="1"
+            aria-label="Quantity to add to cart"
             value={qty}
             onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
           />

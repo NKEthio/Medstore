@@ -102,6 +102,7 @@ export default function AdminDashboard() {
                       <button
                         onClick={() => handleDelete(p.id)}
                         className="btn small-btn danger-btn"
+                        aria-label={`Delete ${p.name}`}
                       >
                         Delete
                       </button>
