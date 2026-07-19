@@ -17,9 +17,10 @@ export default function Checkout() {
 
   if (items.length === 0) {
     return (
-      <div className="container home-state">
-        <p>Your cart is empty.</p>
-        <Link to="/" className="btn secondary" style={{ marginTop: 16 }}>
+      <div className="container home-state" style={{ padding: "100px 24px" }}>
+        <h2>Your cart is empty.</h2>
+        <p style={{ marginTop: 8, color: "var(--muted)" }}>Add some items to your cart before proceeding to checkout.</p>
+        <Link to="/" className="btn secondary" style={{ marginTop: 24 }}>
           Continue shopping
         </Link>
       </div>
@@ -61,46 +62,47 @@ export default function Checkout() {
     <div className="container checkout">
       <h1>Checkout</h1>
 
-      <form className="checkout-form" onSubmit={placeOrder}>
-        <div className="field">
-          <label htmlFor="name">Full name</label>
-          <input id="name" required autoComplete="name" value={form.name} onChange={update("name")} />
-        </div>
-        <div className="field">
-          <label htmlFor="address">Address</label>
-          <input id="address" required autoComplete="address-line1" value={form.address} onChange={update("address")} />
-        </div>
-        <div className="checkout-row">
+      <div className="checkout-container">
+        <form className="checkout-form" onSubmit={placeOrder}>
           <div className="field">
-            <label htmlFor="city">City</label>
-            <input id="city" required autoComplete="address-level2" value={form.city} onChange={update("city")} />
+            <label htmlFor="name">Full name</label>
+            <input id="name" required autoComplete="name" value={form.name} onChange={update("name")} placeholder="Jane Doe" />
           </div>
           <div className="field">
-            <label htmlFor="postcode">Postcode</label>
-            <input id="postcode" required autoComplete="postal-code" value={form.postcode} onChange={update("postcode")} />
+            <label htmlFor="address">Address</label>
+            <input id="address" required autoComplete="address-line1" value={form.address} onChange={update("address")} placeholder="123 Main St, Apt 4B" />
           </div>
-        </div>
+          <div className="checkout-row">
+            <div className="field">
+              <label htmlFor="city">City</label>
+              <input id="city" required autoComplete="address-level2" value={form.city} onChange={update("city")} placeholder="New York" />
+            </div>
+            <div className="field">
+              <label htmlFor="postcode">Postcode</label>
+              <input id="postcode" required autoComplete="postal-code" value={form.postcode} onChange={update("postcode")} placeholder="10001" />
+            </div>
+          </div>
 
-        <div className="checkout-summary">
-          <p>Total</p>
-          <p className="cart-subtotal">${subtotal.toFixed(2)}</p>
-        </div>
+          <div className="checkout-summary">
+            <span>Total Amount</span>
+            <span className="checkout-total">${subtotal.toFixed(2)}</span>
+          </div>
 
-        {error && <p className="error-text">{error}</p>}
-        {!user && (
-          <p className="checkout-note">
-            You'll be asked to sign in before the order is placed.
+          {error && <p className="error-text" style={{ marginBottom: 16 }}>{error}</p>}
+          {!user && (
+            <p className="checkout-note">
+              🔐 Secure Check: You will be prompted to sign in or create an account before your order is finalized.
+            </p>
+          )}
+
+          <button className="btn" type="submit" disabled={placing}>
+            {placing ? "Placing order…" : "Place order"}
+          </button>
+          <p className="checkout-note" style={{ marginTop: 20, borderLeftColor: "var(--muted)" }}>
+            ℹ️ Demo Mode: No actual payments or card details are processed. In a production build, integrate your choice of modern payment gateways.
           </p>
-        )}
-
-        <button className="btn" type="submit" disabled={placing}>
-          {placing ? "Placing order…" : "Place order"}
-        </button>
-        <p className="checkout-note" style={{ marginTop: 12 }}>
-          This is a demo checkout — no real payment is processed. Wire in
-          Stripe, PayPal, or your provider of choice here.
-        </p>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

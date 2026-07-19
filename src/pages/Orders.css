@@ -1,49 +1,124 @@
 .orders {
   padding: 56px 24px 80px;
-  max-width: 680px;
+  max-width: 800px;
 }
 
 .orders h1 {
-  font-size: 28px;
-  margin-bottom: 32px;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 36px;
 }
 
 .order-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .order-card {
   border: 1px solid var(--line);
-  padding: 20px;
+  padding: 24px;
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.order-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
 }
 
 .order-card-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 13px;
   color: var(--muted);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.order-id {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+/* Beautiful pastel badge pills */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.badge-pill.placed {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge-pill.processing {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-pill.shipped {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.badge-pill.cancelled {
+  background: var(--tag-light);
+  color: var(--tag);
 }
 
 .order-items {
   list-style: none;
   padding: 0;
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   font-size: 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
+}
+
+.order-items li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.order-items li::before {
+  content: "•";
+  color: var(--accent);
+  font-size: 16px;
 }
 
 .order-total {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: 16px;
+  color: var(--accent);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed var(--line);
+  padding-top: 12px;
+}
+
+.order-total::before {
+  content: "Total Paid";
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--muted);
 }
 
 /* Polished Empty States */
@@ -51,32 +126,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 50vh;
+  min-height: 60vh;
   padding: 56px 24px;
-  text-align: center;
 }
 
 .orders-empty-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 380px;
+  max-width: 420px;
+  text-align: center;
 }
 
 .orders-empty-icon {
-  width: 64px;
-  height: 64px;
-  stroke: var(--muted);
-  margin-bottom: 20px;
+  width: 72px;
+  height: 72px;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 16px;
+  border-radius: 50%;
+  margin-bottom: 24px;
 }
 
 .orders-empty-content h2 {
-  font-size: 24px;
-  margin-bottom: 8px;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
 .orders-empty-content p {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.6;
 }

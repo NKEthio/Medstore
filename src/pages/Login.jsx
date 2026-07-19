@@ -21,7 +21,7 @@ export default function Login() {
     try {
       await login(email, password);
       navigate(redirectTo);
-    } catch (err) {
+    } catch {
       setError("Couldn't sign in. Check your email and password.");
     } finally {
       setSubmitting(false);
@@ -30,38 +30,42 @@ export default function Login() {
 
   return (
     <div className="container auth">
-      <h1>Sign in</h1>
-      <form onSubmit={onSubmit}>
-        <div className="field">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            required
-            autoComplete="username"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            required
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {error && <p className="error-text">{error}</p>}
-        <button className="btn" type="submit" disabled={submitting}>
-          {submitting ? "Signing in…" : "Sign in"}
-        </button>
-      </form>
-      <p className="auth-switch">
-        No account? <Link to="/signup">Create one</Link>
-      </p>
+      <div className="auth-container">
+        <h1>Sign in</h1>
+        <form onSubmit={onSubmit}>
+          <div className="field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              required
+              autoComplete="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@medstore.com"
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
+          </div>
+          {error && <p className="error-text" style={{ marginBottom: 16 }}>{error}</p>}
+          <button className="btn" type="submit" disabled={submitting}>
+            {submitting ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
+        <p className="auth-switch">
+          No account? <Link to="/signup">Create one</Link>
+        </p>
+      </div>
     </div>
   );
 }
