@@ -54,10 +54,12 @@ export default function Home() {
 
       {/* Category Filter Tabs */}
       {status === "ready" && products.length > 0 && (
-        <div className="home-filters">
+        <div className="home-filters" role="tablist" aria-label="Filter products by category">
           {categories.map((cat) => (
             <button
               key={cat}
+              role="tab"
+              aria-selected={selectedCategory === cat ? "true" : "false"}
               className={`filter-tab ${selectedCategory === cat ? "active" : ""}`}
               onClick={() => setSelectedCategory(cat)}
             >
