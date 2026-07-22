@@ -20,34 +20,45 @@ export function AuthProvider({ children }) {
     const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       if (u) {
-        // Check for admin privileges in three different ways:
-        // 1. Fallback / configured admin emails
+        // Check for admin privileges in three different ways.
+        // Optimization: 1. Fallback / configured admin emails (synchronous check)
         const adminEmails = ["admin@medstore.com", "admin@example.com"];
         const emailIsAdmin = u.email && adminEmails.includes(u.email.toLowerCase());
 
-        // 2. Custom claims
-        let claimIsAdmin = false;
-        try {
-          const tokenResult = await getIdTokenResult(u);
-          if (tokenResult.claims.admin === true || tokenResult.claims.role === "admin") {
-            claimIsAdmin = true;
-          }
-        } catch (err) {
-          console.error("Error fetching token claims:", err);
-        }
+        if (emailIsAdmin) {
+          // If fallback/configured admin email is matched, short-circuit and skip heavy remote network requests.
+          setIsAdmin(true);
+        } else {
+          // Optimization: Execute asynchronous Firestore document and ID token verification concurrently using Promise.all
+          // instead of sequentially, reducing the auth initialization latency significantly.
+          let claimIsAdmin = false;
+          let docIsAdmin = false;
 
-        // 3. Firestore users collection role field
-        let docIsAdmin = false;
-        try {
-          const userDoc = await getDoc(doc(db, "users", u.uid));
-          if (userDoc.exists() && userDoc.data().role === "admin") {
-            docIsAdmin = true;
-          }
-        } catch (err) {
-          console.error("Error fetching user document:", err);
-        }
+          try {
+            const [tokenResult, userDoc] = await Promise.all([
+              getIdTokenResult(u).catch((err) => {
+                console.error("Error fetching token claims:", err);
+                return null;
+              }),
+              getDoc(doc(db, "users", u.uid)).catch((err) => {
+                console.error("Error fetching user document:", err);
+                return null;
+              })
+            ]);
 
-        setIsAdmin(!!(emailIsAdmin || claimIsAdmin || docIsAdmin));
+            if (tokenResult && (tokenResult.claims.admin === true || tokenResult.claims.role === "admin")) {
+              claimIsAdmin = true;
+            }
+
+            if (userDoc && userDoc.exists() && userDoc.data().role === "admin") {
+              docIsAdmin = true;
+            }
+          } catch (err) {
+            console.error("Error during concurrent admin checks:", err);
+          }
+
+          setIsAdmin(claimIsAdmin || docIsAdmin);
+        }
       } else {
         setIsAdmin(false);
       }
