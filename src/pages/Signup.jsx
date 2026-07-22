@@ -36,39 +36,43 @@ export default function Signup() {
 
   return (
     <div className="container auth">
-      <h1>Create account</h1>
-      <form onSubmit={onSubmit}>
-        <div className="field">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            required
-            autoComplete="username"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            required
-            minLength={6}
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {error && <p className="error-text">{error}</p>}
-        <button className="btn" type="submit" disabled={submitting}>
-          {submitting ? "Creating account…" : "Create account"}
-        </button>
-      </form>
-      <p className="auth-switch">
-        Already have an account? <Link to="/login">Sign in</Link>
-      </p>
+      <div className="auth-container">
+        <h1>Create account</h1>
+        <form onSubmit={onSubmit}>
+          <div className="field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              required
+              autoComplete="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              required
+              minLength={6}
+              autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Minimum 6 characters"
+            />
+          </div>
+          {error && <p className="error-text" style={{ marginBottom: 16 }}>{error}</p>}
+          <button className="btn" type="submit" disabled={submitting}>
+            {submitting ? "Creating account…" : "Create account"}
+          </button>
+        </form>
+        <p className="auth-switch">
+          Already have an account? <Link to="/login">Sign in</Link>
+        </p>
+      </div>
     </div>
   );
 }

@@ -57,9 +57,10 @@ export default function ProductDetail() {
 
   if (status === "missing" || status === "error") {
     return (
-      <div className="container home-state">
-        <p>This product couldn't be found.</p>
-        <Link to="/" className="btn secondary" style={{ marginTop: 16 }}>
+      <div className="container home-state" style={{ padding: "100px 24px" }}>
+        <h2>This product couldn't be found.</h2>
+        <p style={{ marginTop: 8, color: "var(--muted)" }}>It might have been removed or the link is incorrect.</p>
+        <Link to="/" className="btn secondary" style={{ marginTop: 24 }}>
           Back to shop
         </Link>
       </div>
@@ -77,34 +78,71 @@ export default function ProductDetail() {
       </div>
 
       <div className="product-detail-info">
-        <p className="eyebrow">{product.category || "Shop"}</p>
+        <span className="eyebrow">{product.category || "Shop"}</span>
         <h1>{product.name}</h1>
         <p className="product-detail-price">${product.price.toFixed(2)}</p>
         <p className="product-detail-desc">{product.description}</p>
 
         <div className="qty-row">
           <label htmlFor="qty">Quantity</label>
-          <input
-            id="qty"
-            type="number"
-            min="1"
-            aria-label="Quantity to add to cart"
-            value={qty}
-            onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
-          />
+          <div className="qty-controls">
+            <button
+              type="button"
+              className="qty-btn"
+              onClick={() => setQty((prev) => Math.max(1, prev - 1))}
+              aria-label="Decrease quantity"
+            >
+              −
+            </button>
+            <input
+              id="qty"
+              type="number"
+              min="1"
+              aria-label="Quantity to add to cart"
+              value={qty}
+              onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
+            />
+            <button
+              type="button"
+              className="qty-btn"
+              onClick={() => setQty((prev) => prev + 1)}
+              aria-label="Increase quantity"
+            >
+              +
+            </button>
+          </div>
         </div>
 
-        <button
-          className="btn"
-          onClick={() => {
-            addItem(product, qty);
-            setAdded(true);
-          }}
-        >
-          Add to cart
-        </button>
+        <div className="product-detail-actions">
+          <button
+            className="btn"
+            style={{ width: "100%", padding: "14px 28px" }}
+            onClick={() => {
+              addItem(product, qty);
+              setAdded(true);
+              setTimeout(() => setAdded(false), 3000);
+            }}
+          >
+            Add to cart
+          </button>
 
-        {added && <p className="added-note">Added to cart.</p>}
+          {added && (
+            <p className="added-note">
+              <svg
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ width: 18, height: 18 }}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              Added to cart successfully.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

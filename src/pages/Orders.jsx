@@ -34,7 +34,7 @@ export default function Orders() {
     };
   }, [user.uid]);
 
-  if (status === "loading") return <p className="container home-state">Loading…</p>;
+  if (status === "loading") return <p className="container home-state">Loading your orders…</p>;
 
   if (status === "error") {
     return (
@@ -79,7 +79,9 @@ export default function Orders() {
           <div className="order-card" key={order.id}>
             <div className="order-card-header">
               <p className="order-id">Order #{order.id.slice(0, 8)}</p>
-              <p className="order-status">{order.status}</p>
+              <span className={`badge-pill ${order.status?.toLowerCase() || "placed"}`}>
+                {order.status || "placed"}
+              </span>
             </div>
             <ul className="order-items">
               {order.items.map((item) => (

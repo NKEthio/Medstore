@@ -25,7 +25,7 @@ export default function Cart() {
             />
           </svg>
           <h2>Your cart is empty</h2>
-          <p>Explore our considered goods to find everyday essentials.</p>
+          <p>Explore our curation of considered goods to find everyday essentials.</p>
           <Link to="/" className="btn" style={{ marginTop: 24 }}>
             Continue shopping
           </Link>
@@ -38,49 +38,102 @@ export default function Cart() {
     <div className="container cart">
       <h1>Your cart</h1>
 
-      <div className="cart-list">
-        {items.map((item) => (
-          <div className="cart-row" key={item.id}>
-            <div className="cart-row-image">
-              {item.image ? (
-                <img src={item.image} alt={item.name} />
-              ) : (
-                <div className="product-image-fallback" aria-hidden="true" />
-              )}
-            </div>
-            <div className="cart-row-info">
-              <p className="cart-row-name">{item.name}</p>
-              <p className="cart-row-price">${item.price.toFixed(2)}</p>
-            </div>
-            <input
-              type="number"
-              min="1"
-              aria-label={`Quantity for ${item.name}`}
-              value={item.qty}
-              onChange={(e) => setQty(item.id, Number(e.target.value) || 1)}
-            />
-            <p className="cart-row-total">
-              ${(item.price * item.qty).toFixed(2)}
-            </p>
-            <button
-              className="cart-row-remove"
-              onClick={() => removeItem(item.id)}
-              aria-label={`Remove ${item.name} from cart`}
-            >
-              Remove
-            </button>
+      <div className="cart-layout">
+        {/* Left: Items list */}
+        <div className="cart-items-section">
+          <div className="cart-list">
+            {items.map((item) => (
+              <div className="cart-row" key={item.id}>
+                <div className="cart-row-image">
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} />
+                  ) : (
+                    <div className="product-image-fallback" aria-hidden="true" />
+                  )}
+                </div>
+                <div className="cart-row-info">
+                  <span className="cart-row-category">{item.category || "Shop"}</span>
+                  <p className="cart-row-name">{item.name}</p>
+                  <p className="cart-row-price">${item.price.toFixed(2)} each</p>
+                </div>
+
+                <div className="qty-controls">
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    onClick={() => setQty(item.id, Math.max(1, item.qty - 1))}
+                    aria-label="Decrease quantity"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min="1"
+                    aria-label={`Quantity for ${item.name}`}
+                    value={item.qty}
+                    onChange={(e) => setQty(item.id, Math.max(1, Number(e.target.value) || 1))}
+                  />
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    onClick={() => setQty(item.id, item.qty + 1)}
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <p className="cart-row-total">
+                  ${(item.price * item.qty).toFixed(2)}
+                </p>
+
+                <button
+                  className="cart-row-remove"
+                  onClick={() => removeItem(item.id)}
+                  aria-label={`Remove ${item.name} from cart`}
+                >
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{ width: 18, height: 18 }}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                    />
+                  </svg>
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
 
-      <div className="cart-summary">
-        <p>Subtotal</p>
-        <p className="cart-subtotal">${subtotal.toFixed(2)}</p>
-      </div>
+        {/* Right: Order Summary Card */}
+        <div className="cart-summary-card">
+          <h2>Order Summary</h2>
+          <div className="summary-row">
+            <span>Items Subtotal</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </div>
+          <div className="summary-row">
+            <span>Shipping</span>
+            <span>Calculated at checkout</span>
+          </div>
+          <div className="summary-row total">
+            <span>Estimated Total</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </div>
 
-      <Link to="/checkout" className="btn cart-checkout-btn">
-        Checkout
-      </Link>
+          <Link to="/checkout" className="btn cart-checkout-btn">
+            Proceed to Checkout
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
