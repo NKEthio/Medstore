@@ -21,33 +21,44 @@ export function AuthProvider({ children }) {
       setUser(u);
       if (u) {
         // Check for admin privileges in three different ways:
-        // 1. Fallback / configured admin emails
+        // Optimization: Synchronously check fallback admin emails first to short-circuit
+        // and completely avoid expensive network requests for bootstrap admins.
         const adminEmails = ["admin@medstore.com", "admin@example.com"];
         const emailIsAdmin = u.email && adminEmails.includes(u.email.toLowerCase());
 
-        // 2. Custom claims
-        let claimIsAdmin = false;
-        try {
-          const tokenResult = await getIdTokenResult(u);
-          if (tokenResult.claims.admin === true || tokenResult.claims.role === "admin") {
-            claimIsAdmin = true;
-          }
-        } catch (err) {
-          console.error("Error fetching token claims:", err);
-        }
+        if (emailIsAdmin) {
+          setIsAdmin(true);
+        } else {
+          // Optimization: Run custom claims and Firestore document checks in parallel
+          // using Promise.all to avoid blocking sequential awaits.
+          let claimIsAdmin = false;
+          let docIsAdmin = false;
 
-        // 3. Firestore users collection role field
-        let docIsAdmin = false;
-        try {
-          const userDoc = await getDoc(doc(db, "users", u.uid));
-          if (userDoc.exists() && userDoc.data().role === "admin") {
-            docIsAdmin = true;
-          }
-        } catch (err) {
-          console.error("Error fetching user document:", err);
-        }
+          try {
+            const [tokenResult, userDoc] = await Promise.all([
+              getIdTokenResult(u).catch((err) => {
+                console.error("Error fetching token claims:", err);
+                return null;
+              }),
+              getDoc(doc(db, "users", u.uid)).catch((err) => {
+                console.error("Error fetching user document:", err);
+                return null;
+              })
+            ]);
 
-        setIsAdmin(!!(emailIsAdmin || claimIsAdmin || docIsAdmin));
+            if (tokenResult && (tokenResult.claims.admin === true || tokenResult.claims.role === "admin")) {
+              claimIsAdmin = true;
+            }
+
+            if (userDoc && userDoc.exists() && userDoc.data().role === "admin") {
+              docIsAdmin = true;
+            }
+          } catch (err) {
+            console.error("Error during parallel admin check:", err);
+          }
+
+          setIsAdmin(claimIsAdmin || docIsAdmin);
+        }
       } else {
         setIsAdmin(false);
       }
