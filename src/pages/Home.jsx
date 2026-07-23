@@ -50,14 +50,16 @@ export default function Home() {
         </p>
       </div>
 
-      <h2 className="catalog-title">Explore Catalog</h2>
+      <h2 id="catalog-title" className="catalog-title">Explore Catalog</h2>
 
       {/* Category Filter Tabs */}
       {status === "ready" && products.length > 0 && (
-        <div className="home-filters">
+        <div className="home-filters" role="tablist" aria-label="Product categories">
           {categories.map((cat) => (
             <button
               key={cat}
+              role="tab"
+              aria-selected={selectedCategory === cat}
               className={`filter-tab ${selectedCategory === cat ? "active" : ""}`}
               onClick={() => setSelectedCategory(cat)}
             >
@@ -67,46 +69,48 @@ export default function Home() {
         </div>
       )}
 
-      {status === "loading" && (
-        <div className="product-grid skeleton-grid">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="skeleton-card">
-              <div className="skeleton-image pulse"></div>
-              <div className="skeleton-meta">
-                <div className="skeleton-category pulse"></div>
-                <div className="skeleton-title pulse"></div>
-                <div className="skeleton-price pulse"></div>
+      <div id="product-grid" role="region" aria-live="polite" aria-labelledby="catalog-title">
+        {status === "loading" && (
+          <div className="product-grid skeleton-grid">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="skeleton-card">
+                <div className="skeleton-image pulse"></div>
+                <div className="skeleton-meta">
+                  <div className="skeleton-category pulse"></div>
+                  <div className="skeleton-title pulse"></div>
+                  <div className="skeleton-price pulse"></div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
 
-      {status === "error" && (
-        <p className="home-state error-text">
-          Couldn't load products. Check your Firebase config in
-          src/lib/firebase.js and your Firestore security rules.
-        </p>
-      )}
+        {status === "error" && (
+          <p className="home-state error-text">
+            Couldn't load products. Check your Firebase config in
+            src/lib/firebase.js and your Firestore security rules.
+          </p>
+        )}
 
-      {status === "ready" && products.length === 0 && (
-        <p className="home-state">
-          No products yet. Add documents to the "products" collection in
-          Firestore to see them here.
-        </p>
-      )}
+        {status === "ready" && products.length === 0 && (
+          <p className="home-state">
+            No products yet. Add documents to the "products" collection in
+            Firestore to see them here.
+          </p>
+        )}
 
-      {status === "ready" && products.length > 0 && filteredProducts.length === 0 && (
-        <p className="home-state">No products found in this category.</p>
-      )}
+        {status === "ready" && products.length > 0 && filteredProducts.length === 0 && (
+          <p className="home-state">No products found in this category.</p>
+        )}
 
-      {status === "ready" && filteredProducts.length > 0 && (
-        <div className="product-grid">
-          {filteredProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      )}
+        {status === "ready" && filteredProducts.length > 0 && (
+          <div className="product-grid">
+            {filteredProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
