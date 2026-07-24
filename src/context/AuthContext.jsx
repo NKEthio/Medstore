@@ -21,33 +21,36 @@ export function AuthProvider({ children }) {
       setUser(u);
       if (u) {
         // Check for admin privileges in three different ways:
-        // 1. Fallback / configured admin emails
+        // 1. Fallback / configured admin emails — Check synchronously first to short-circuit network requests!
         const adminEmails = ["admin@medstore.com", "admin@example.com"];
         const emailIsAdmin = u.email && adminEmails.includes(u.email.toLowerCase());
 
-        // 2. Custom claims
-        let claimIsAdmin = false;
-        try {
-          const tokenResult = await getIdTokenResult(u);
-          if (tokenResult.claims.admin === true || tokenResult.claims.role === "admin") {
-            claimIsAdmin = true;
-          }
-        } catch (err) {
-          console.error("Error fetching token claims:", err);
-        }
+        if (emailIsAdmin) {
+          // If fallback admin email, short-circuit and set immediately, avoiding expensive network requests
+          setIsAdmin(true);
+        } else {
+          // For other users, parallelize Custom Claims and Firestore document checks using Promise.all to avoid sequential awaits!
+          try {
+            const [tokenResult, userDoc] = await Promise.all([
+              getIdTokenResult(u).catch((err) => {
+                console.error("Error fetching token claims:", err);
+                return null;
+              }),
+              getDoc(doc(db, "users", u.uid)).catch((err) => {
+                console.error("Error fetching user document:", err);
+                return null;
+              }),
+            ]);
 
-        // 3. Firestore users collection role field
-        let docIsAdmin = false;
-        try {
-          const userDoc = await getDoc(doc(db, "users", u.uid));
-          if (userDoc.exists() && userDoc.data().role === "admin") {
-            docIsAdmin = true;
-          }
-        } catch (err) {
-          console.error("Error fetching user document:", err);
-        }
+            const claimIsAdmin = tokenResult && (tokenResult.claims?.admin === true || tokenResult.claims?.role === "admin");
+            const docIsAdmin = userDoc && userDoc.exists() && userDoc.data()?.role === "admin";
 
-        setIsAdmin(!!(emailIsAdmin || claimIsAdmin || docIsAdmin));
+            setIsAdmin(!!(claimIsAdmin || docIsAdmin));
+          } catch (err) {
+            console.error("Error in parallel privilege verification flow:", err);
+            setIsAdmin(false);
+          }
+        }
       } else {
         setIsAdmin(false);
       }
