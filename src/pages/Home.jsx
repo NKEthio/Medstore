@@ -1,8 +1,20 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../lib/firebase";
+import { db, isFallback } from "../lib/firebase";
 import ProductCard from "../components/ProductCard";
 import "./Home.css";
+
+const srOnlyStyle = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  padding: "0",
+  margin: "-1px",
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  border: "0",
+};
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -13,14 +25,42 @@ export default function Home() {
     let cancelled = false;
 
     (async () => {
+      if (isFallback) {
+        console.log("Firebase is in fallback mode. Loading sample products.");
+        try {
+          const fallback = (await import("../../sample-products.json")).default;
+          if (!cancelled) {
+            setProducts(fallback.map((p, index) => ({ id: `sample-${index}`, ...p })));
+            setStatus("ready");
+          }
+        } catch (err) {
+          console.error("Failed to load local sample products", err);
+          if (!cancelled) setStatus("error");
+        }
+        return;
+      }
+
       try {
         const snap = await getDocs(collection(db, "products"));
         if (cancelled) return;
-        setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+        if (snap.empty) {
+          const fallback = (await import("../../sample-products.json")).default;
+          setProducts(fallback.map((p, index) => ({ id: `sample-${index}`, ...p })));
+        } else {
+          setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+        }
         setStatus("ready");
       } catch (err) {
-        console.error(err);
-        if (!cancelled) setStatus("error");
+        console.error("Firestore loading failed, falling back to sample products:", err);
+        if (!cancelled) {
+          try {
+            const fallback = (await import("../../sample-products.json")).default;
+            setProducts(fallback.map((p, index) => ({ id: `sample-${index}`, ...p })));
+            setStatus("ready");
+          } catch {
+            setStatus("error");
+          }
+        }
       }
     })();
 
@@ -54,16 +94,22 @@ export default function Home() {
 
       {/* Category Filter Tabs */}
       {status === "ready" && products.length > 0 && (
-        <div className="home-filters">
+        <div className="home-filters" role="tablist" aria-label="Product categories">
           {categories.map((cat) => (
             <button
               key={cat}
+              role="tab"
+              aria-selected={selectedCategory === cat}
               className={`filter-tab ${selectedCategory === cat ? "active" : ""}`}
               onClick={() => setSelectedCategory(cat)}
             >
               {cat}
             </button>
           ))}
+          {/* Visually hidden but announced status of filtered results */}
+          <div style={srOnlyStyle} role="status" aria-live="polite">
+            Showing {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"} in {selectedCategory} category.
+          </div>
         </div>
       )}
 
