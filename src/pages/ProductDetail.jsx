@@ -127,7 +127,7 @@ export default function ProductDetail() {
           </button>
 
           {added && (
-            <p className="added-note">
+            <p className="added-note" role="status" aria-live="polite">
               <svg
                 fill="none"
                 stroke="currentColor"

@@ -21,4 +21,5 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const isFallback = !env.VITE_FIREBASE_API_KEY || env.VITE_FIREBASE_API_KEY.includes("FakeKey");
 export default app;
