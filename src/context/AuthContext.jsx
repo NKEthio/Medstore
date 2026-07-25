@@ -25,29 +25,40 @@ export function AuthProvider({ children }) {
         const adminEmails = ["admin@medstore.com", "admin@example.com"];
         const emailIsAdmin = u.email && adminEmails.includes(u.email.toLowerCase());
 
-        // 2. Custom claims
-        let claimIsAdmin = false;
-        try {
-          const tokenResult = await getIdTokenResult(u);
-          if (tokenResult.claims.admin === true || tokenResult.claims.role === "admin") {
-            claimIsAdmin = true;
-          }
-        } catch (err) {
-          console.error("Error fetching token claims:", err);
-        }
+        if (emailIsAdmin) {
+          // Optimization: If user is already identified as admin by their fallback email,
+          // we can set isAdmin synchronously, short-circuit the async checks,
+          // and save up to 2 expensive network calls (token claims and firestore getDoc).
+          setIsAdmin(true);
+        } else {
+          // Optimization: Execute both asynchronous checks in parallel using Promise.all,
+          // reducing the overall latency from (t1 + t2) to max(t1, t2).
+          let claimIsAdmin = false;
+          let docIsAdmin = false;
 
-        // 3. Firestore users collection role field
-        let docIsAdmin = false;
-        try {
-          const userDoc = await getDoc(doc(db, "users", u.uid));
-          if (userDoc.exists() && userDoc.data().role === "admin") {
-            docIsAdmin = true;
-          }
-        } catch (err) {
-          console.error("Error fetching user document:", err);
-        }
+          const claimsPromise = getIdTokenResult(u)
+            .then((tokenResult) => {
+              if (tokenResult.claims.admin === true || tokenResult.claims.role === "admin") {
+                claimIsAdmin = true;
+              }
+            })
+            .catch((err) => {
+              console.error("Error fetching token claims:", err);
+            });
 
-        setIsAdmin(!!(emailIsAdmin || claimIsAdmin || docIsAdmin));
+          const docPromise = getDoc(doc(db, "users", u.uid))
+            .then((userDoc) => {
+              if (userDoc.exists() && userDoc.data().role === "admin") {
+                docIsAdmin = true;
+              }
+            })
+            .catch((err) => {
+              console.error("Error fetching user document:", err);
+            });
+
+          await Promise.all([claimsPromise, docPromise]);
+          setIsAdmin(claimIsAdmin || docIsAdmin);
+        }
       } else {
         setIsAdmin(false);
       }
