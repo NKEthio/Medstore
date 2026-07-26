@@ -63,6 +63,7 @@ export default function Cart() {
                     className="qty-btn"
                     onClick={() => setQty(item.id, Math.max(1, item.qty - 1))}
                     aria-label="Decrease quantity"
+                    disabled={item.qty <= 1}
                   >
                     −
                   </button>

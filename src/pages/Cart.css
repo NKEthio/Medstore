@@ -115,9 +115,21 @@
   transition: var(--transition);
 }
 
-.cart-row .qty-btn:hover {
+.cart-row .qty-btn:not(:disabled):hover {
   background: var(--accent-light);
   color: var(--accent);
+}
+
+.cart-row .qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: transparent;
+  color: var(--muted);
+}
+
+.cart-row .qty-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .cart-row input {
