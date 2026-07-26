@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 
 const CartContext = createContext(null);
 const STORAGE_KEY = "shop_cart_v1";
@@ -17,7 +17,9 @@ export function CartProvider({ children }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
-  const addItem = (product, qty = 1) => {
+  // Optimization: Memoize cart manipulation functions to prevent downstream consumers
+  // from re-rendering if the provider's parent triggers a re-render.
+  const addItem = useCallback((product, qty = 1) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === product.id);
       if (existing) {
@@ -27,26 +29,43 @@ export function CartProvider({ children }) {
       }
       return [...prev, { id: product.id, name: product.name, price: product.price, image: product.image, qty }];
     });
-  };
+  }, []);
 
-  const removeItem = (id) => {
+  const removeItem = useCallback((id) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
-  };
+  }, []);
 
-  const setQty = (id, qty) => {
+  const setQty = useCallback((id, qty) => {
     if (qty <= 0) return removeItem(id);
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)));
-  };
+  }, [removeItem]);
 
-  const clearCart = () => setItems([]);
+  const clearCart = useCallback(() => setItems([]), []);
 
-  const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
-  const count = items.reduce((sum, i) => sum + i.qty, 0);
+  // Optimization: Memoize calculated values (subtotal and count) so that they are only recalculated
+  // when the list of items actually changes.
+  const subtotal = useMemo(() => {
+    return items.reduce((sum, i) => sum + i.price * i.qty, 0);
+  }, [items]);
+
+  const count = useMemo(() => {
+    return items.reduce((sum, i) => sum + i.qty, 0);
+  }, [items]);
+
+  // Optimization: Memoize the entire context value object. Without this, a new object reference
+  // is created on every render, triggering rendering in all components consuming CartContext.
+  const contextValue = useMemo(() => ({
+    items,
+    addItem,
+    removeItem,
+    setQty,
+    clearCart,
+    subtotal,
+    count
+  }), [items, addItem, removeItem, setQty, clearCart, subtotal, count]);
 
   return (
-    <CartContext.Provider
-      value={{ items, addItem, removeItem, setQty, clearCart, subtotal, count }}
-    >
+    <CartContext.Provider value={contextValue}>
       {children}
     </CartContext.Provider>
   );
