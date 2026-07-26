@@ -1,7 +1,10 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import "./ProductCard.css";
 
-export default function ProductCard({ product }) {
+// Optimization: Wrap ProductCard in memo to prevent redundant re-renders of list items
+// when other elements of the parent view (like filter tabs) change but the product reference remains the same.
+function ProductCard({ product }) {
   return (
     <Link to={`/product/${product.id}`} className="product-card">
       <div className="product-image">
@@ -41,3 +44,5 @@ export default function ProductCard({ product }) {
     </Link>
   );
 }
+
+export default memo(ProductCard);

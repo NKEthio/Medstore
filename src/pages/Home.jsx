@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import ProductCard from "../components/ProductCard";
@@ -29,13 +29,19 @@ export default function Home() {
     };
   }, []);
 
-  // Dynamically compute unique categories from fetched products
-  const categories = ["All", ...new Set(products.map((p) => p.category).filter(Boolean))];
+  // Optimization: Wrap category computation in useMemo so that we only map and create
+  // the Set when the list of products actually changes, rather than on every render.
+  const categories = useMemo(() => {
+    return ["All", ...new Set(products.map((p) => p.category).filter(Boolean))];
+  }, [products]);
 
-  // Filter products based on selected tab
-  const filteredProducts = selectedCategory === "All"
-    ? products
-    : products.filter((p) => p.category === selectedCategory);
+  // Optimization: Wrap filtered products computation in useMemo so we only re-filter
+  // when products or the selected category changes.
+  const filteredProducts = useMemo(() => {
+    return selectedCategory === "All"
+      ? products
+      : products.filter((p) => p.category === selectedCategory);
+  }, [products, selectedCategory]);
 
   return (
     <div className="container home">
