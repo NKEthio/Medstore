@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../lib/firebase";
+import { db, isFallback } from "../lib/firebase";
+import mockProducts from "../../sample-products.json";
 import { useCart } from "../context/CartContext";
 import "./ProductDetail.css";
 
@@ -20,6 +21,16 @@ export default function ProductDetail() {
 
     (async () => {
       try {
+        if (isFallback) {
+          const matched = mockProducts.find((p, index) => `mock-id-${index}` === id);
+          if (matched) {
+            setProduct({ id, ...matched });
+            setStatus("ready");
+          } else {
+            setStatus("missing");
+          }
+          return;
+        }
         const snap = await getDoc(doc(db, "products", id));
         if (cancelled) return;
         if (snap.exists()) {
@@ -91,6 +102,7 @@ export default function ProductDetail() {
               className="qty-btn"
               onClick={() => setQty((prev) => Math.max(1, prev - 1))}
               aria-label="Decrease quantity"
+              disabled={qty <= 1}
             >
               −
             </button>

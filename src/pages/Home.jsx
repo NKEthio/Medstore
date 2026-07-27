@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../lib/firebase";
+import { db, isFallback } from "../lib/firebase";
+import mockProducts from "../../sample-products.json";
 import ProductCard from "../components/ProductCard";
 import "./Home.css";
 
@@ -14,6 +15,11 @@ export default function Home() {
 
     (async () => {
       try {
+        if (isFallback) {
+          setProducts(mockProducts.map((p, index) => ({ id: `mock-id-${index}`, ...p })));
+          setStatus("ready");
+          return;
+        }
         const snap = await getDocs(collection(db, "products"));
         if (cancelled) return;
         setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));

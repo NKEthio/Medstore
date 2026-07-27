@@ -95,9 +95,21 @@
   transition: var(--transition);
 }
 
-.qty-btn:hover {
+.qty-btn:not(:disabled):hover {
   background: var(--accent-light);
   color: var(--accent);
+}
+
+.qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: transparent;
+  color: var(--muted);
+}
+
+.qty-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .qty-controls input {
