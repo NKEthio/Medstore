@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -67,7 +67,9 @@ export function AuthProvider({ children }) {
     return unsub;
   }, []);
 
-  const signup = async (email, password) => {
+  // Optimization: Memoize authentication functions to maintain stable references
+  // across components and prevent downstream consumers from re-rendering.
+  const signup = useCallback(async (email, password) => {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     const u = credential.user;
 
@@ -83,15 +85,26 @@ export function AuthProvider({ children }) {
     });
 
     return credential;
-  };
+  }, []);
 
-  const login = (email, password) =>
-    signInWithEmailAndPassword(auth, email, password);
+  const login = useCallback((email, password) =>
+    signInWithEmailAndPassword(auth, email, password), []);
 
-  const logout = () => signOut(auth);
+  const logout = useCallback(() => signOut(auth), []);
+
+  // Optimization: Memoize the entire context value object. Without this, a new object reference
+  // is created on every render, triggering rendering in all components consuming AuthContext.
+  const contextValue = useMemo(() => ({
+    user,
+    isAdmin,
+    loading,
+    signup,
+    login,
+    logout
+  }), [user, isAdmin, loading, signup, login, logout]);
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading, signup, login, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
