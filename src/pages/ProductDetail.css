@@ -124,6 +124,12 @@
   color: var(--ink);
   background: transparent;
   padding: 0;
+  transition: var(--transition);
+}
+
+.qty-controls input:focus-visible {
+  outline: none;
+  background-color: var(--accent-light);
 }
 
 .qty-controls input::-webkit-outer-spin-button,
