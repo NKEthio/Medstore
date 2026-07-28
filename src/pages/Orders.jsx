@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { useAuth } from "../context/AuthContext";
@@ -66,6 +67,9 @@ export default function Orders() {
           </svg>
           <h2>No orders yet</h2>
           <p>Any orders you place will be beautifully documented here.</p>
+          <Link to="/" className="btn" style={{ marginTop: 24 }}>
+            Continue shopping
+          </Link>
         </div>
       </div>
     );
@@ -78,7 +82,18 @@ export default function Orders() {
         {orders.map((order) => (
           <div className="order-card" key={order.id}>
             <div className="order-card-header">
-              <p className="order-id">Order #{order.id.slice(0, 8)}</p>
+              <div>
+                <p className="order-id">Order #{order.id.slice(0, 8)}</p>
+                {order.createdAt && (
+                  <p className="order-date" style={{ fontSize: "12px", color: "var(--muted)", marginTop: "4px" }}>
+                    {new Date(order.createdAt.seconds * 1000).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                )}
+              </div>
               <span className={`badge-pill ${order.status?.toLowerCase() || "placed"}`}>
                 {order.status || "placed"}
               </span>
