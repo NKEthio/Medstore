@@ -4,12 +4,17 @@ import "./ProductCard.css";
 
 // Optimization: Wrap ProductCard in memo to prevent redundant re-renders of list items
 // when other elements of the parent view (like filter tabs) change but the product reference remains the same.
-function ProductCard({ product }) {
+function ProductCard({ product, priority = false }) {
   return (
     <Link to={`/product/${product.id}`} className="product-card">
       <div className="product-image">
         {product.image ? (
-          <img src={product.image} alt={product.name} loading="lazy" />
+          <img
+            src={product.image}
+            alt={product.name}
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : undefined}
+          />
         ) : (
           <div className="product-image-fallback" aria-hidden="true" />
         )}
