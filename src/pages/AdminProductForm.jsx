@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { doc, getDoc, addDoc, updateDoc, collection } from "firebase/firestore";
 import { db } from "../lib/firebase";
+import { clearProductCache } from "../lib/productCache";
 
 export default function AdminProductForm() {
   const { id } = useParams();
@@ -76,6 +77,7 @@ export default function AdminProductForm() {
       } else {
         await addDoc(collection(db, "products"), payload);
       }
+      clearProductCache();
       navigate("/admin");
     } catch (err) {
       console.error(err);
