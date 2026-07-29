@@ -1,9 +1,35 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import "./Cart.css";
 
 export default function Cart() {
-  const { items, removeItem, setQty, subtotal } = useCart();
+  const { items, removeItem, addItem, setQty, subtotal } = useCart();
+  const [removedItem, setRemovedItem] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
+  const handleRemove = (item) => {
+    setRemovedItem(item);
+    setShowToast(true);
+    removeItem(item.id);
+  };
+
+  const handleUndo = () => {
+    if (removedItem) {
+      addItem(removedItem, removedItem.qty);
+      setRemovedItem(null);
+      setShowToast(false);
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -30,6 +56,40 @@ export default function Cart() {
             Continue shopping
           </Link>
         </div>
+
+        {showToast && removedItem && (
+          <div className="cart-undo-toast" role="status" aria-live="polite">
+            <span className="cart-undo-message">
+              Removed <strong>{removedItem.name}</strong> from cart.
+            </span>
+            <button
+              type="button"
+              className="undo-btn"
+              onClick={handleUndo}
+              aria-label={`Undo removal of ${removedItem.name}`}
+            >
+              Undo
+            </button>
+            <button
+              type="button"
+              className="undo-close-btn"
+              onClick={() => setShowToast(false)}
+              aria-label="Close notification"
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ width: 14, height: 14 }}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -89,8 +149,9 @@ export default function Cart() {
                 </p>
 
                 <button
+                  type="button"
                   className="cart-row-remove"
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => handleRemove(item)}
                   aria-label={`Remove ${item.name} from cart`}
                 >
                   <svg
@@ -135,6 +196,40 @@ export default function Cart() {
           </Link>
         </div>
       </div>
+
+      {showToast && removedItem && (
+        <div className="cart-undo-toast" role="status" aria-live="polite">
+          <span className="cart-undo-message">
+            Removed <strong>{removedItem.name}</strong> from cart.
+          </span>
+          <button
+            type="button"
+            className="undo-btn"
+            onClick={handleUndo}
+            aria-label={`Undo removal of ${removedItem.name}`}
+          >
+            Undo
+          </button>
+          <button
+            type="button"
+            className="undo-close-btn"
+            onClick={() => setShowToast(false)}
+            aria-label="Close notification"
+          >
+            <svg
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ width: 14, height: 14 }}
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

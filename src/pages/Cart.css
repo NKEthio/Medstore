@@ -300,3 +300,94 @@
     align-self: center;
   }
 }
+
+/* Cart Undo Notification Toast */
+.cart-undo-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: var(--surface);
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1000;
+  font-size: 14px;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(24px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.cart-undo-toast .cart-undo-message {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cart-undo-toast .cart-undo-message strong {
+  color: var(--surface);
+  font-weight: 600;
+}
+
+.cart-undo-toast .undo-btn {
+  background: var(--accent-light);
+  color: var(--accent);
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cart-undo-toast .undo-btn:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.cart-undo-toast .undo-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.cart-undo-toast .undo-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.cart-undo-toast .undo-close-btn:hover {
+  color: var(--surface);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.cart-undo-toast .undo-close-btn:focus-visible {
+  outline: 2px solid var(--surface);
+  outline-offset: 2px;
+}
+
+.cart-row-remove:focus-visible {
+  background: var(--tag-light);
+  color: var(--tag);
+  outline: 2px solid var(--tag);
+  outline-offset: 2px;
+}
