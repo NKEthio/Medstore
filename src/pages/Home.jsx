@@ -3,11 +3,14 @@ import { collection, getDocs } from "firebase/firestore";
 import { db, isFallback } from "../lib/firebase";
 import mockProducts from "../../sample-products.json";
 import ProductCard from "../components/ProductCard";
+import { getCachedProducts, setCachedProducts } from "../lib/productCache";
 import "./Home.css";
 
 export default function Home() {
-  const [products, setProducts] = useState([]);
-  const [status, setStatus] = useState("loading"); // loading | ready | error
+  // Optimization: Initialize state from the cache if available.
+  // This enables instant rendering on subsequent visits/back-navigation (SWR pattern).
+  const [products, setProducts] = useState(() => getCachedProducts() || []);
+  const [status, setStatus] = useState(() => getCachedProducts() ? "ready" : "loading"); // loading | ready | error
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
@@ -16,17 +19,24 @@ export default function Home() {
     (async () => {
       try {
         if (isFallback) {
-          setProducts(mockProducts.map((p, index) => ({ id: `mock-id-${index}`, ...p })));
+          const loaded = mockProducts.map((p, index) => ({ id: `mock-id-${index}`, ...p }));
+          setProducts(loaded);
+          setCachedProducts(loaded);
           setStatus("ready");
           return;
         }
         const snap = await getDocs(collection(db, "products"));
         if (cancelled) return;
-        setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+        const loaded = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        setProducts(loaded);
+        setCachedProducts(loaded);
         setStatus("ready");
       } catch (err) {
         console.error(err);
-        if (!cancelled) setStatus("error");
+        // Only show error page if we don't have cached products to fall back on
+        if (!cancelled && !getCachedProducts()) {
+          setStatus("error");
+        }
       }
     })();
 
@@ -116,8 +126,8 @@ export default function Home() {
 
       {status === "ready" && filteredProducts.length > 0 && (
         <div className="product-grid">
-          {filteredProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
+          {filteredProducts.map((p, index) => (
+            <ProductCard key={p.id} product={p} priority={index < 4} />
           ))}
         </div>
       )}
