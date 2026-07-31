@@ -158,8 +158,31 @@
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 12px;
   animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.added-note-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.added-note-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.added-note-link:hover,
+.added-note-link:focus-visible {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
 }
 
 @keyframes slideUp {

@@ -139,20 +139,25 @@ export default function ProductDetail() {
           </button>
 
           {added && (
-            <p className="added-note" role="status" aria-live="polite">
-              <svg
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ width: 18, height: 18 }}
-                aria-hidden="true"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-              </svg>
-              Added to cart successfully.
-            </p>
+            <div className="added-note" role="status" aria-live="polite">
+              <span className="added-note-text">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ width: 18, height: 18 }}
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                Added to cart successfully.
+              </span>
+              <Link to="/cart" className="added-note-link" aria-label="View shopping cart">
+                View Cart →
+              </Link>
+            </div>
           )}
         </div>
       </div>
