@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../lib/firebase";
+import { setCachedProducts, clearProductCache } from "../lib/productCache";
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
@@ -16,7 +17,9 @@ export default function AdminDashboard() {
     setStatus("loading");
     try {
       const snap = await getDocs(collection(db, "products"));
-      setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      const loaded = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      setProducts(loaded);
+      setCachedProducts(loaded);
       setStatus("ready");
     } catch (err) {
       console.error(err);
@@ -29,6 +32,7 @@ export default function AdminDashboard() {
       try {
         await deleteDoc(doc(db, "products", id));
         setProducts((prev) => prev.filter((p) => p.id !== id));
+        clearProductCache();
       } catch (err) {
         console.error(err);
         alert("Failed to delete the product. Check your security rules.");
