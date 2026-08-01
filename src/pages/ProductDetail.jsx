@@ -4,19 +4,55 @@ import { doc, getDoc } from "firebase/firestore";
 import { db, isFallback } from "../lib/firebase";
 import mockProducts from "../../sample-products.json";
 import { useCart } from "../context/CartContext";
+import { getCachedProducts } from "../lib/productCache";
 import "./ProductDetail.css";
+
+// Helper function to find a product in mock products or in the cached list
+function findCachedProduct(id) {
+  if (isFallback) {
+    return mockProducts.find((p, index) => `mock-id-${index}` === id);
+  }
+  const cached = getCachedProducts();
+  return cached ? cached.find((p) => p.id === id) : null;
+}
 
 export default function ProductDetail() {
   const { id } = useParams();
   const { addItem } = useCart();
-  const [product, setProduct] = useState(null);
-  const [status, setStatus] = useState("loading");
+
+  // Optimization: Initialize state from the product catalog cache if available.
+  // This enables instant (0ms latency) rendering on catalog item selection and back-navigation.
+  const [product, setProduct] = useState(() => {
+    const cached = findCachedProduct(id);
+    return cached ? { id, ...cached } : null;
+  });
+  const [status, setStatus] = useState(() => (findCachedProduct(id) ? "ready" : "loading"));
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
+  // Synchronize state when routing parameter `id` changes (e.g., in React 19 / modern React)
+  // to avoid rendering a stale product layout during the initial render pass.
+  const [prevId, setPrevId] = useState(id);
+  if (id !== prevId) {
+    setPrevId(id);
+    const cached = findCachedProduct(id);
+    setProduct(cached ? { id, ...cached } : null);
+    setStatus(cached ? "ready" : "loading");
+    setQty(1);
+    setAdded(false);
+  }
+
   useEffect(() => {
     let cancelled = false;
-    setStatus("loading");
+    // Optimization: If the product was not cached, show the loading spinner immediately.
+    // Otherwise, we adopt a Stale-While-Revalidate (SWR) pattern, silently fetching
+    // the latest data in the background without flashing the UI skeleton.
+    setStatus((prevStatus) => {
+      if (prevStatus === "ready") {
+        return prevStatus;
+      }
+      return "loading";
+    });
     setAdded(false);
 
     (async () => {
