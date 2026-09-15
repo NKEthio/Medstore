@@ -167,36 +167,34 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="catalog-top-actions">
-          {/* Horizontal Category Tabs */}
-          <div className="category-pill-tabs" role="tablist" aria-label="Catalog Categories">
-            {["All items", "Smartphones", "Kitchen", "Game Console", "Audio"].map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                role="tab"
-                aria-selected={selectedCategory === cat}
-                className={`category-pill ${selectedCategory === cat ? "active" : ""}`}
-                onClick={() => handleCategoryChange(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* Sort Dropdown */}
-          <div className="sort-dropdown-container">
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-              className="sort-select-pill"
-              aria-label="Sort products"
+        {/* Horizontal Category Tabs */}
+        <div className="category-pill-tabs" role="tablist" aria-label="Catalog Categories">
+          {["All items", "Smartphones", "Kitchen", "Game Console", "Audio"].map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              role="tab"
+              aria-selected={selectedCategory === cat}
+              className={`category-pill ${selectedCategory === cat ? "active" : ""}`}
+              onClick={() => handleCategoryChange(cat)}
             >
-              <option value="Top rated">≡ Top rated</option>
-              <option value="Price: Low to High">Price: Low to High</option>
-              <option value="Price: High to Low">Price: High to Low</option>
-            </select>
-          </div>
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Sort Dropdown */}
+        <div className="sort-dropdown-container">
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="sort-select-pill"
+            aria-label="Sort products"
+          >
+            <option value="Top rated">≡ Top rated</option>
+            <option value="Price: Low to High">Price: Low to High</option>
+            <option value="Price: High to Low">Price: High to Low</option>
+          </select>
         </div>
       </div>
 
