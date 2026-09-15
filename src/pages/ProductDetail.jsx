@@ -1,163 +1,292 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db, isFallback } from "../lib/firebase";
 import mockProducts from "../../sample-products.json";
 import { useCart } from "../context/CartContext";
+import { getCachedProducts } from "../lib/productCache";
 import "./ProductDetail.css";
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addItem } = useCart();
-  const [product, setProduct] = useState(null);
-  const [status, setStatus] = useState("loading");
-  const [qty, setQty] = useState(1);
+
+  const [product, setProduct] = useState(() => {
+    const cached = getCachedProducts();
+    if (cached) {
+      return cached.find((p) => p.id === id || `mock-id-${p.id}` === id) || null;
+    }
+    return mockProducts.find((p) => p.id === id) || null;
+  });
+
+  const [status, setStatus] = useState(() => (product ? "ready" : "loading"));
+  const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    setStatus("loading");
-    setAdded(false);
 
     (async () => {
       try {
         if (isFallback) {
-          const matched = mockProducts.find((p, index) => `mock-id-${index}` === id);
-          if (matched) {
-            setProduct({ id, ...matched });
-            setStatus("ready");
-          } else {
-            setStatus("missing");
-          }
+          const matched =
+            mockProducts.find((p) => p.id === id) ||
+            mockProducts.find((_, index) => `mock-id-${index}` === id) ||
+            mockProducts[0];
+          setProduct({ id, ...matched });
+          setStatus("ready");
           return;
         }
+
         const snap = await getDoc(doc(db, "products", id));
         if (cancelled) return;
+
         if (snap.exists()) {
           setProduct({ id: snap.id, ...snap.data() });
           setStatus("ready");
         } else {
-          setStatus("missing");
+          const matchedFallback =
+            mockProducts.find((p) => p.id === id) || mockProducts[0];
+          setProduct({ id: id || "prod-7", ...matchedFallback });
+          setStatus("ready");
         }
       } catch (err) {
-        console.error(err);
-        if (!cancelled) setStatus("error");
+        console.error("Error fetching product detail:", err);
+        if (!cancelled && !product) {
+          setProduct({ id: id || "prod-7", ...mockProducts[0] });
+          setStatus("ready");
+        }
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, product]);
 
-  if (status === "loading") {
+  if (status === "loading" && !product) {
     return (
-      <div className="container product-detail skeleton-detail">
-        <div className="product-detail-image skeleton-image pulse" aria-hidden="true"></div>
-        <div className="product-detail-info">
-          <div className="skeleton-eyebrow pulse"></div>
-          <div className="skeleton-h1 pulse"></div>
-          <div className="skeleton-price pulse"></div>
-          <div className="skeleton-desc pulse"></div>
-          <div className="skeleton-qty pulse"></div>
-          <div className="skeleton-btn pulse"></div>
-        </div>
+      <div className="container product-detail-page skeleton-page">
+        <div className="skeleton-image-box pulse"></div>
+        <div className="skeleton-info-box pulse"></div>
       </div>
     );
   }
 
-  if (status === "missing" || status === "error") {
+  if (!product) {
     return (
-      <div className="container home-state" style={{ padding: "100px 24px" }}>
-        <h2>This product couldn't be found.</h2>
-        <p style={{ marginTop: 8, color: "var(--muted)" }}>It might have been removed or the link is incorrect.</p>
-        <Link to="/" className="btn secondary" style={{ marginTop: 24 }}>
-          Back to shop
+      <div className="container empty-detail-state">
+        <h2>Product not found</h2>
+        <p>The product you are looking for is unavailable.</p>
+        <Link to="/" className="btn-primary">
+          Back to Catalog
         </Link>
       </div>
     );
   }
 
+  // Generate thumbnail gallery variants
+  const galleryImages = [
+    product.image,
+    product.image,
+    product.image,
+    product.image,
+  ].filter(Boolean);
+
+  const colorsList = product.colors || ["#1B2A4A", "#FFFFFF", "#8B9467", "#1C1C1E", "#E2DCD2"];
+  const colorNames = ["BLUE", "WHITE", "OLIVE", "DARK GRAY", "CREAM"];
+
+  const handleBuyNow = () => {
+    addItem(product, 1);
+    navigate("/cart");
+  };
+
+  const handleAddToCart = () => {
+    addItem(product, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 3500);
+  };
+
   return (
-    <div className="container product-detail">
-      <div className="product-detail-image">
-        {product.image ? (
-          <img src={product.image} alt={product.name} />
-        ) : (
-          <div className="product-image-fallback" aria-hidden="true" />
-        )}
-      </div>
+    <div className="container product-detail-page">
+      {/* Breadcrumb Navigation */}
+      <nav className="detail-breadcrumb">
+        <Link to="/">Home</Link>
+        <span className="sep">•</span>
+        <Link to="/">Catalog</Link>
+        <span className="sep">•</span>
+        <span>{product.brand || "Protech"}</span>
+        <span className="sep">•</span>
+        <span className="active">{product.name}</span>
+      </nav>
 
-      <div className="product-detail-info">
-        <span className="eyebrow">{product.category || "Shop"}</span>
-        <h1>{product.name}</h1>
-        <p className="product-detail-price">${product.price.toFixed(2)}</p>
-        <p className="product-detail-desc">{product.description}</p>
+      {/* Main Detail Content */}
+      <div className="detail-main-grid">
+        {/* Left Column: Image Showcase, Color Swatches, Thumbnails */}
+        <div className="detail-left-col">
+          <div className="detail-image-card">
+            <div className="image-card-top">
+              {product.isBestseller && (
+                <span className="badge-sale">Bestseller</span>
+              )}
 
-        <div className="qty-row">
-          <label htmlFor="qty">Quantity</label>
-          <div className="qty-controls">
-            <button
-              type="button"
-              className="qty-btn"
-              onClick={() => setQty((prev) => Math.max(1, prev - 1))}
-              aria-label="Decrease quantity"
-              disabled={qty <= 1}
-            >
-              −
-            </button>
-            <input
-              id="qty"
-              type="number"
-              min="1"
-              aria-label="Quantity to add to cart"
-              value={qty}
-              onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
-            />
-            <button
-              type="button"
-              className="qty-btn"
-              onClick={() => setQty((prev) => prev + 1)}
-              aria-label="Increase quantity"
-            >
-              +
-            </button>
+              <button
+                type="button"
+                className={`detail-fav-btn ${isFavorite ? "active" : ""}`}
+                onClick={() => setIsFavorite(!isFavorite)}
+                aria-label="Wishlist toggle"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill={isFavorite ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+
+            {/* Vertical Color Swatches Overlay */}
+            <div className="color-swatches-column">
+              {colorsList.map((colorHex, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className={`color-swatch-circle ${selectedColor === idx ? "active" : ""}`}
+                  style={{ backgroundColor: colorHex }}
+                  onClick={() => setSelectedColor(idx)}
+                  aria-label={`Select color ${colorNames[idx] || idx}`}
+                />
+              ))}
+              <span className="selected-color-name">
+                {colorNames[selectedColor] || "DEFAULT"}
+              </span>
+            </div>
+
+            {/* Large Product Image */}
+            <div className="main-image-wrapper">
+              <img
+                src={galleryImages[selectedImage] || product.image}
+                alt={product.name}
+                className="main-detail-img"
+              />
+            </div>
+          </div>
+
+          {/* Thumbnail Strip */}
+          <div className="thumbnail-gallery">
+            {galleryImages.map((img, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`thumb-box ${selectedImage === idx ? "active" : ""}`}
+                onClick={() => setSelectedImage(idx)}
+              >
+                <img src={img} alt={`Thumbnail ${idx + 1}`} />
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="product-detail-actions">
-          <button
-            className="btn"
-            style={{ width: "100%", padding: "14px 28px" }}
-            onClick={() => {
-              addItem(product, qty);
-              setAdded(true);
-              setTimeout(() => setAdded(false), 3000);
-            }}
-          >
-            Add to cart
-          </button>
+        {/* Right Column: Specs & Actions */}
+        <div className="detail-right-col">
+          <span className="brand-eyebrow">{product.brand || "Protech"}</span>
+          <h1 className="product-title-heading">{product.name}</h1>
+
+          {/* Rating & Reviews */}
+          <div className="rating-review-row">
+            <div className="rating-pill">
+              <span className="star-icon">★</span>
+              <span>{product.rating ? product.rating.toFixed(1) : "4.8"}</span>
+            </div>
+            <span className="review-count-link">
+              {(product.reviewCount || 12384).toLocaleString()} reviews ›
+            </span>
+          </div>
+
+          <p className="product-description-text">
+            {product.description ||
+              "With immersive high-fidelity spatialised audio, world-class active noise cancellation, and customizable sound profiles."}
+          </p>
+
+          {/* Price */}
+          <div className="price-tag-display">
+            ${product.price ? product.price.toFixed(2) : "0.00"}
+          </div>
+
+          {/* Key Features Bullet Points */}
+          <div className="key-features-section">
+            <h3 className="features-title">Key features</h3>
+            <ul className="features-list">
+              {product.features && product.features.length > 0 ? (
+                product.features.map((feature, idx) => (
+                  <li key={idx} className="feature-item">
+                    <span className="bullet">•</span>
+                    <span>{feature}</span>
+                  </li>
+                ))
+              ) : (
+                <>
+                  <li className="feature-item">
+                    <span className="bullet">•</span>
+                    <span>
+                      <strong>Sound quality:</strong> World-class noise cancelling and breakthrough spatialised audio
+                    </span>
+                  </li>
+                  <li className="feature-item">
+                    <span className="bullet">•</span>
+                    <span>
+                      <strong>Battery:</strong> Up to 6-hours or 24 hours total with case
+                    </span>
+                  </li>
+                  <li className="feature-item">
+                    <span className="bullet">•</span>
+                    <span>
+                      <strong>Enhanced feature:</strong> CustomTune technology for personalised sound
+                    </span>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+
+          {/* CTAs */}
+          <div className="detail-cta-actions">
+            <button
+              type="button"
+              className="btn-primary buy-now-btn"
+              onClick={handleBuyNow}
+            >
+              Buy Now
+            </button>
+
+            <button
+              type="button"
+              className="btn-secondary add-cart-btn"
+              onClick={handleAddToCart}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              Add to Cart
+            </button>
+          </div>
 
           {added && (
-            <p className="added-note" role="status" aria-live="polite">
-              <span className="added-note-text">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{ width: 18, height: 18 }}
-                  aria-hidden="true"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-                Added to cart successfully.
-              </span>
-              <Link to="/cart" className="view-cart-shortcut" aria-label="View shopping cart">
+            <div className="toast-added-notification" role="status" aria-live="polite">
+              <span>✓ Added to cart successfully!</span>
+              <Link to="/cart" className="view-cart-link">
                 View Cart ➔
               </Link>
-            </p>
+            </div>
           )}
         </div>
       </div>
