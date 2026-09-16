@@ -6,7 +6,7 @@
     "category": "Kitchen",
     "subCategory": "Kitchen Appliances",
     "price": 985.99,
-    "originalPrice": 1056.00,
+    "originalPrice": 1056.0,
     "discount": "Sale 15%",
     "rating": 5.0,
     "reviewCount": 342,
@@ -18,7 +18,11 @@
       "Built-in conical burr grinder with 5 fineness levels",
       "Thermoblock heating system for quick startup"
     ],
-    "colors": ["#161618", "#E2E8F0", "#C0392B"],
+    "colors": [
+      "#161618",
+      "#E2E8F0",
+      "#C0392B"
+    ],
     "image": "https://images.unsplash.com/photo-1517668808822-9eaa03afd2af?w=800&auto=format&fit=crop"
   },
   {
@@ -27,7 +31,7 @@
     "brand": "Apple",
     "category": "Smartphones",
     "subCategory": "Smartphones",
-    "price": 1130.00,
+    "price": 1130.0,
     "originalPrice": null,
     "discount": null,
     "rating": 4.8,
@@ -40,7 +44,11 @@
       "A18 Pro chip with 6-core GPU for console-level gaming",
       "48MP Fusion camera with 5x Telephoto optical zoom"
     ],
-    "colors": ["#1C1C1E", "#F2F2F7", "#54534F"],
+    "colors": [
+      "#1C1C1E",
+      "#F2F2F7",
+      "#54534F"
+    ],
     "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop"
   },
   {
@@ -49,8 +57,8 @@
     "brand": "SMEG",
     "category": "Kitchen",
     "subCategory": "Kitchen Appliances",
-    "price": 129.00,
-    "originalPrice": 149.00,
+    "price": 129.0,
+    "originalPrice": 149.0,
     "discount": "Sale 13%",
     "rating": 4.9,
     "reviewCount": 512,
@@ -62,7 +70,10 @@
       "20L capacity with 245mm glass turntable",
       "Quick-start 30 second instant heating button"
     ],
-    "colors": ["#1C1C1E", "#E2E8F0"],
+    "colors": [
+      "#1C1C1E",
+      "#E2E8F0"
+    ],
     "image": "https://images.unsplash.com/photo-1585659722983-3a675dabf23d?w=800&auto=format&fit=crop"
   },
   {
@@ -71,8 +82,8 @@
     "brand": "SMEG",
     "category": "Kitchen",
     "subCategory": "Kitchen Appliances",
-    "price": 162.00,
-    "originalPrice": 180.00,
+    "price": 162.0,
+    "originalPrice": 180.0,
     "discount": "Sale 10%",
     "rating": 4.9,
     "reviewCount": 890,
@@ -80,11 +91,15 @@
     "inStock": true,
     "description": "1.7-liter electric kettle featuring soft-opening lid, removable limescale filter, and 360-degree swivel base.",
     "features": [
-      "Auto shut-off at 100°C or when empty",
+      "Auto shut-off at 100\u00b0C or when empty",
       "Stainless steel body with enamel finish",
       "Concealed heating element for rapid boiling"
     ],
-    "colors": ["#1C1C1E", "#E2E8F0", "#D1D5DB"],
+    "colors": [
+      "#1C1C1E",
+      "#E2E8F0",
+      "#D1D5DB"
+    ],
     "image": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f6?w=800&auto=format&fit=crop"
   },
   {
@@ -93,8 +108,8 @@
     "brand": "Remez",
     "category": "Home Appliances",
     "subCategory": "Home Appliances",
-    "price": 85.00,
-    "originalPrice": 100.00,
+    "price": 85.0,
+    "originalPrice": 100.0,
     "discount": "Sale 15%",
     "rating": 4.7,
     "reviewCount": 230,
@@ -106,7 +121,9 @@
       "Detachable 280ml water tank for 18 minutes of steaming",
       "Safe on all delicate fabrics including silk and wool"
     ],
-    "colors": ["#1C1C1E"],
+    "colors": [
+      "#1C1C1E"
+    ],
     "image": "https://images.unsplash.com/photo-1582884887003-a3b58f797e0c?w=800&auto=format&fit=crop"
   },
   {
@@ -115,7 +132,7 @@
     "brand": "Apple",
     "category": "Audio",
     "subCategory": "Audio",
-    "price": 549.00,
+    "price": 549.0,
     "originalPrice": null,
     "discount": null,
     "rating": 4.8,
@@ -128,7 +145,11 @@
       "Knit-mesh canopy and memory foam ear cushions for ultimate fit",
       "20 hours of listening time with ANC enabled"
     ],
-    "colors": ["#1C1C1E", "#E2E8F0", "#3B82F6"],
+    "colors": [
+      "#1C1C1E",
+      "#E2E8F0",
+      "#3B82F6"
+    ],
     "image": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&auto=format&fit=crop"
   },
   {
@@ -137,20 +158,26 @@
     "brand": "Bose",
     "category": "Audio",
     "subCategory": "Audio",
-    "price": 449.00,
+    "price": 449.0,
     "originalPrice": null,
     "discount": null,
     "rating": 4.2,
     "reviewCount": 12384,
     "isBestseller": true,
     "inStock": true,
-    "description": "With Bose Immersive Audio — breakthrough spatialised audio makes your music feel more real — no matter the content or streaming source.",
+    "description": "With Bose Immersive Audio \u2014 breakthrough spatialised audio makes your music feel more real \u2014 no matter the content or streaming source.",
     "features": [
       "Sound quality: World-class noise cancelling and breakthrough spatialised audio",
       "Battery: Up to 6-hours or 24 hours total with case",
       "Enhanced feature: CustomTune technology for personalised sound"
     ],
-    "colors": ["#1B2A4A", "#FFFFFF", "#8B9467", "#1C1C1E", "#E2DCD2"],
+    "colors": [
+      "#1B2A4A",
+      "#FFFFFF",
+      "#8B9467",
+      "#1C1C1E",
+      "#E2DCD2"
+    ],
     "image": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&auto=format&fit=crop"
   },
   {
@@ -159,8 +186,8 @@
     "brand": "Sony",
     "category": "Game Console",
     "subCategory": "Game Console",
-    "price": 699.00,
-    "originalPrice": 749.00,
+    "price": 699.0,
+    "originalPrice": 749.0,
     "discount": "Sale 7%",
     "rating": 4.9,
     "reviewCount": 4200,
@@ -172,7 +199,82 @@
       "60fps fidelity mode gaming at ultra 4K resolution",
       "DualSense wireless controller with haptic feedback"
     ],
-    "colors": ["#FFFFFF", "#1C1C1E"],
+    "colors": [
+      "#FFFFFF",
+      "#1C1C1E"
+    ],
     "image": "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800&auto=format&fit=crop"
+  },
+  {
+    "id": "scraped-1789546991695-1",
+    "name": "Mindray BeneHeart C2 Automated External Defibrillator",
+    "price": 1850.0,
+    "description": "Smart, durable biphasic AED designed for emergency response across Ethiopian clinics and public venues.",
+    "category": "Medical Devices",
+    "brand": "EthioMed Supplies",
+    "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80",
+    "status": "pending",
+    "scrapedAt": "2026-09-16T08:23:11.738057Z",
+    "sourceQuery": "\"medical device\" AND \"Ethiopia\""
+  },
+  {
+    "id": "scraped-1789546991738-2",
+    "name": "BPL Medical Oxygen Concentrator 10L",
+    "price": 920.0,
+    "description": "High-purity continuous flow oxygen concentrator suitable for Ethiopian regional hospitals and home healthcare.",
+    "category": "Medical Devices",
+    "brand": "Afro Medical Impex (Addis Ababa)",
+    "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=600&auto=format&fit=crop&q=80",
+    "status": "pending",
+    "scrapedAt": "2026-09-16T08:23:11.738111Z",
+    "sourceQuery": "\"medical device\" AND \"Ethiopia\""
+  },
+  {
+    "id": "scraped-1789546991738-3",
+    "name": "Digital Patient Vital Signs Monitor CMS8000",
+    "price": 1250.0,
+    "description": "12.1 inch multi-parameter monitor for ECG, SpO2, NIBP, Respiration and Temperature in clinical environments.",
+    "category": "Diagnostic",
+    "brand": "Horn of Africa Medical Ltd",
+    "image": "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=600&auto=format&fit=crop&q=80",
+    "status": "pending",
+    "scrapedAt": "2026-09-16T08:23:11.738124Z",
+    "sourceQuery": "\"medical device\" AND \"Ethiopia\""
+  },
+  {
+    "id": "scraped-1789546991738-4",
+    "name": "Portable Ultrasound System Sonoscape E2",
+    "price": 3400.0,
+    "description": "Lightweight black-and-white ultrasonic diagnostic system with dual transducer ports.",
+    "category": "Diagnostic",
+    "brand": "AddisCare Medical Instruments",
+    "image": "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=600&auto=format&fit=crop&q=80",
+    "status": "pending",
+    "scrapedAt": "2026-09-16T08:23:11.738179Z",
+    "sourceQuery": "\"medical device\" AND \"Ethiopia\""
+  },
+  {
+    "id": "scraped-1789546991738-5",
+    "name": "Stainless Steel Surgical Autoclave Sterilizer 50L",
+    "price": 1400.0,
+    "description": "Vertical pressure steam sterilizer with safety interlock for Ethiopian surgical centers.",
+    "category": "Surgical",
+    "brand": "EthioMed Supplies",
+    "image": "https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=600&auto=format&fit=crop&q=80",
+    "status": "pending",
+    "scrapedAt": "2026-09-16T08:23:11.738192Z",
+    "sourceQuery": "\"medical device\" AND \"Ethiopia\""
+  },
+  {
+    "id": "scraped-1789546991738-6",
+    "name": "Infrared Non-Contact Forehead Thermometer",
+    "price": 45.0,
+    "description": "Medical-grade non-contact forehead thermometer with color LCD fever alarm.",
+    "category": "Diagnostic",
+    "brand": "Red Cross Ethiopia Supplies",
+    "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80",
+    "status": "pending",
+    "scrapedAt": "2026-09-16T08:23:11.738201Z",
+    "sourceQuery": "\"medical device\" AND \"Ethiopia\""
   }
 ]

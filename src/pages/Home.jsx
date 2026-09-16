@@ -16,7 +16,7 @@ export default function Home() {
   const selectedCategory = searchParams.get("category") || "All items";
   const filterType = searchParams.get("filter") || ""; // 'sale' | 'new'
 
-  const [selectedBrands, setSelectedBrands] = useState(["Apple", "SMEG", "Remez"]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
   const [brandSearch, setBrandSearch] = useState("");
   const [sortOption, setSortOption] = useState("Top rated");
   const [searchQuery, setSearchQuery] = useState("");
@@ -57,12 +57,24 @@ export default function Home() {
     };
   }, []);
 
-  // Compute unique brands from products
+  // Compute unique categories from published products
+  const availableCategories = useMemo(() => {
+    const catsSet = new Set(["All items"]);
+    products.forEach((p) => {
+      if ((!p.status || p.status === "active") && p.category) {
+        catsSet.add(p.category);
+      }
+    });
+    return Array.from(catsSet);
+  }, [products]);
+
+  // Compute unique brands from published products
   const availableBrands = useMemo(() => {
-    const brandsSet = new Set(products.map((p) => p.brand).filter(Boolean));
-    // Ensure default popular brands are present
-    ["Apple", "LG", "KitchenAid", "SMEG", "Samsung", "Sony", "Remez", "Bose"].forEach((b) =>
-      brandsSet.add(b)
+    const brandsSet = new Set(
+      products
+        .filter((p) => !p.status || p.status === "active")
+        .map((p) => p.brand)
+        .filter(Boolean)
     );
     return Array.from(brandsSet);
   }, [products]);
@@ -105,9 +117,14 @@ export default function Home() {
     setSearchParams(searchParams);
   };
 
-  // Main product filtering logic
+  // Main product filtering logic (filters out pending/scraped products unless approved)
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
+      // Status filter: only active / non-pending products in shop
+      if (product.status && product.status !== "active") {
+        return false;
+      }
+
       // Category filter
       if (
         selectedCategory !== "All items" &&
@@ -159,17 +176,17 @@ export default function Home() {
       {/* Top Breadcrumb & Header */}
       <div className="catalog-header-bar">
         <div className="catalog-title-wrapper">
-          <h1 className="main-catalog-title">Bestsellers</h1>
+          <h1 className="main-catalog-title">Catalog</h1>
           <div className="breadcrumb-nav">
             <span>Home</span>
             <span className="dot">•</span>
-            <span className="active">Bestsellers</span>
+            <span className="active">Products</span>
           </div>
         </div>
 
         {/* Horizontal Category Tabs */}
         <div className="category-pill-tabs" role="tablist" aria-label="Catalog Categories">
-          {["All items", "Smartphones", "Kitchen", "Game Console", "Audio"].map((cat) => (
+          {availableCategories.map((cat) => (
             <button
               key={cat}
               type="button"
@@ -250,68 +267,70 @@ export default function Home() {
             {priceSectionOpen && (
               <div className="accordion-body">
                 <div className="price-range-inputs">
-                  <span className="price-range-label">$0 — $2,000+</span>
+                  <span className="price-range-label">$0 — $5,000+</span>
                 </div>
               </div>
             )}
           </div>
 
           {/* Accordion: Brand Section */}
-          <div className="filter-accordion-item">
-            <button
-              type="button"
-              className="accordion-header"
-              onClick={() => setBrandSectionOpen(!brandSectionOpen)}
-            >
-              <span>Brand</span>
-              <span className="accordion-chevron">{brandSectionOpen ? "∧" : "∨"}</span>
-            </button>
-            {brandSectionOpen && (
-              <div className="accordion-body">
-                <div className="brand-search-box">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    className="search-icon"
-                  >
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                  </svg>
-                  <input
-                    type="text"
-                    placeholder="Search brands"
-                    value={brandSearch}
-                    onChange={(e) => setBrandSearch(e.target.value)}
-                    className="brand-search-input"
-                  />
-                </div>
+          {availableBrands.length > 0 && (
+            <div className="filter-accordion-item">
+              <button
+                type="button"
+                className="accordion-header"
+                onClick={() => setBrandSectionOpen(!brandSectionOpen)}
+              >
+                <span>Brand / Provider</span>
+                <span className="accordion-chevron">{brandSectionOpen ? "∧" : "∨"}</span>
+              </button>
+              {brandSectionOpen && (
+                <div className="accordion-body">
+                  <div className="brand-search-box">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      className="search-icon"
+                    >
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input
+                      type="text"
+                      placeholder="Search brands"
+                      value={brandSearch}
+                      onChange={(e) => setBrandSearch(e.target.value)}
+                      className="brand-search-input"
+                    />
+                  </div>
 
-                <div className="brand-checkbox-list">
-                  {filteredBrandsList.map((brand) => {
-                    const checked = selectedBrands.includes(brand);
-                    return (
-                      <label key={brand} className="brand-checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleBrand(brand)}
-                          className="custom-checkbox"
-                        />
-                        <span className="checkbox-custom-box">
-                          {checked && <span className="checkmark">✓</span>}
-                        </span>
-                        <span className="brand-name">{brand}</span>
-                      </label>
-                    );
-                  })}
+                  <div className="brand-checkbox-list">
+                    {filteredBrandsList.map((brand) => {
+                      const checked = selectedBrands.includes(brand);
+                      return (
+                        <label key={brand} className="brand-checkbox-label">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggleBrand(brand)}
+                            className="custom-checkbox"
+                          />
+                          <span className="checkbox-custom-box">
+                            {checked && <span className="checkmark">✓</span>}
+                          </span>
+                          <span className="brand-name">{brand}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </aside>
 
         {/* Main Product Grid */}
