@@ -11,16 +11,23 @@ export default function Navbar({ onSearchClick }) {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [catalogOpen, setCatalogOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    setCatalogOpen(false);
+  };
 
   return (
     <header className="nav">
       <div className="container nav-inner">
         <div className="nav-left">
-          <Link to="/" className="nav-brand">
+          <Link to="/" className="nav-brand" onClick={closeMobileMenu}>
             Protech
           </Link>
 
-          <div className="catalog-dropdown-wrapper">
+          {/* Desktop Catalog Button */}
+          <div className="catalog-dropdown-wrapper desktop-only">
             <button
               type="button"
               className={`catalog-btn ${catalogOpen ? "active" : ""}`}
@@ -45,7 +52,8 @@ export default function Navbar({ onSearchClick }) {
             )}
           </div>
 
-          <nav className="nav-main-links">
+          {/* Desktop Navigation Links */}
+          <nav className="nav-main-links desktop-only">
             <NavLink to="/" end className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
               Bestsellers
             </NavLink>
@@ -106,18 +114,18 @@ export default function Navbar({ onSearchClick }) {
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
-            <span>Cart</span>
+            <span className="desktop-only">Cart</span>
             {count > 0 && <span className="cart-badge-count">{count}</span>}
           </Link>
 
           {isAdmin && (
-            <Link to="/admin" className="admin-badge-btn">
+            <Link to="/admin" className="admin-badge-btn desktop-only">
               Admin
             </Link>
           )}
 
           {user ? (
-            <div className="user-menu-wrapper">
+            <div className="user-menu-wrapper desktop-only">
               <Link to="/orders" className="nav-user-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -138,7 +146,7 @@ export default function Navbar({ onSearchClick }) {
               </button>
             </div>
           ) : (
-            <Link to="/login" className="nav-user-btn">
+            <Link to="/login" className="nav-user-btn desktop-only">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
@@ -146,8 +154,112 @@ export default function Navbar({ onSearchClick }) {
               <span>Log in</span>
             </Link>
           )}
+
+          {/* Hamburger Menu Toggle Button for Mobile */}
+          <button
+            type="button"
+            className="hamburger-toggle-btn mobile-only"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="mobile-drawer-overlay" onClick={closeMobileMenu}>
+          <div className="mobile-drawer-content" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-drawer-header">
+              <span className="mobile-drawer-title">Navigation</span>
+              <button
+                type="button"
+                className="mobile-drawer-close"
+                onClick={closeMobileMenu}
+                aria-label="Close drawer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="mobile-drawer-section">
+              <span className="mobile-section-label">Browse</span>
+              <NavLink to="/" end className="mobile-nav-link" onClick={closeMobileMenu}>
+                Bestsellers
+              </NavLink>
+              <NavLink to="/?filter=sale" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Sale Items
+              </NavLink>
+              <NavLink to="/?filter=new" className="mobile-nav-link" onClick={closeMobileMenu}>
+                New Arrivals
+              </NavLink>
+            </div>
+
+            <div className="mobile-drawer-section">
+              <span className="mobile-section-label">Categories</span>
+              <Link to="/" className="mobile-nav-link" onClick={closeMobileMenu}>
+                All Categories
+              </Link>
+              <Link to="/?category=Smartphones" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Smartphones
+              </Link>
+              <Link to="/?category=Kitchen" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Kitchen Appliances
+              </Link>
+              <Link to="/?category=Audio" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Audio & Headphones
+              </Link>
+              <Link to="/?category=Game Console" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Game Consoles
+              </Link>
+            </div>
+
+            <div className="mobile-drawer-section mobile-account-section">
+              <span className="mobile-section-label">Account</span>
+              {isAdmin && (
+                <Link to="/admin" className="mobile-nav-link admin-highlight" onClick={closeMobileMenu}>
+                  Admin Dashboard
+                </Link>
+              )}
+              {user ? (
+                <>
+                  <Link to="/orders" className="mobile-nav-link" onClick={closeMobileMenu}>
+                    My Orders & Profile
+                  </Link>
+                  <button
+                    type="button"
+                    className="mobile-logout-btn"
+                    onClick={async () => {
+                      await logout();
+                      closeMobileMenu();
+                      navigate("/");
+                    }}
+                  >
+                    Sign Out ({user.email})
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="mobile-login-btn" onClick={closeMobileMenu}>
+                  Sign In / Register
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
