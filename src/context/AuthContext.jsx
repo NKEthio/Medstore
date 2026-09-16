@@ -2,12 +2,14 @@ import { createContext, useContext, useEffect, useState, useCallback, useMemo } 
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
   getIdTokenResult,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { auth, db } from "../lib/firebase";
+import { auth, db, isFallback } from "../lib/firebase";
 
 const AuthContext = createContext(null);
 
@@ -90,6 +92,46 @@ export function AuthProvider({ children }) {
   const login = useCallback((email, password) =>
     signInWithEmailAndPassword(auth, email, password), []);
 
+  const loginWithGoogle = useCallback(async () => {
+    if (isFallback) {
+      // Fallback demo user for local preview when live API keys are unavailable
+      const fakeUser = {
+        uid: "google-demo-user-123",
+        email: "demo.user@google.com",
+        displayName: "Google Demo User",
+        photoURL: "https://lh3.googleusercontent.com/a/default-user",
+      };
+      setUser(fakeUser);
+      setIsAdmin(false);
+      return { user: fakeUser };
+    }
+
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const u = result.user;
+
+    // Sync user doc in Firestore if it doesn't exist yet
+    try {
+      const userRef = doc(db, "users", u.uid);
+      const snap = await getDoc(userRef);
+      if (!snap.exists()) {
+        const adminEmails = ["admin@medstore.com", "admin@example.com"];
+        const role = u.email && adminEmails.includes(u.email.toLowerCase()) ? "admin" : "user";
+        await setDoc(userRef, {
+          email: u.email,
+          displayName: u.displayName || "",
+          photoURL: u.photoURL || "",
+          role: role,
+          createdAt: new Date().toISOString(),
+        });
+      }
+    } catch (err) {
+      console.warn("Could not sync Google user profile to Firestore:", err);
+    }
+
+    return result;
+  }, []);
+
   const logout = useCallback(() => signOut(auth), []);
 
   // Optimization: Memoize the entire context value object. Without this, a new object reference
@@ -100,8 +142,9 @@ export function AuthProvider({ children }) {
     loading,
     signup,
     login,
+    loginWithGoogle,
     logout
-  }), [user, isAdmin, loading, signup, login, logout]);
+  }), [user, isAdmin, loading, signup, login, loginWithGoogle, logout]);
 
   return (
     <AuthContext.Provider value={contextValue}>
