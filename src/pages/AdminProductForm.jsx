@@ -11,8 +11,12 @@ export default function AdminProductForm() {
 
   const [form, setForm] = useState({
     name: "",
+    brand: "",
     price: "",
     category: "",
+    condition: "Certified Refurbished",
+    warranty: "90-Day BioMed Warranty",
+    location: "USA",
     description: "",
     image: "",
   });
@@ -29,8 +33,12 @@ export default function AdminProductForm() {
             const data = snap.data();
             setForm({
               name: data.name || "",
+              brand: data.brand || "",
               price: data.price ? String(data.price) : "",
               category: data.category || "",
+              condition: data.condition || "Certified Refurbished",
+              warranty: data.warranty || "90-Day BioMed Warranty",
+              location: data.location || "USA",
               description: data.description || "",
               image: data.image || "",
             });
@@ -65,10 +73,17 @@ export default function AdminProductForm() {
 
     const payload = {
       name: form.name.trim(),
+      brand: form.brand.trim() || "Medical Specialist",
       price: priceNum,
-      category: form.category.trim(),
+      category: form.category.trim() || "Diagnostic & Imaging",
+      condition: form.condition.trim(),
+      warranty: form.warranty.trim(),
+      location: form.location.trim(),
       description: form.description.trim(),
-      image: form.image.trim(),
+      image: form.image.trim() || "https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&auto=format&fit=crop",
+      fdaCleared: true,
+      biomedCalibrated: true,
+      status: "active",
     };
 
     try {
@@ -122,7 +137,33 @@ export default function AdminProductForm() {
 
         <div className="checkout-row">
           <div className="field">
-            <label htmlFor="price">Price ($)</label>
+            <label htmlFor="brand">Manufacturer / Brand</label>
+            <input
+              id="brand"
+              name="brand"
+              required
+              value={form.brand}
+              onChange={handleChange}
+              placeholder="e.g. GE Healthcare, Philips, Stryker"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="category">Medical Category</label>
+            <input
+              id="category"
+              name="category"
+              required
+              value={form.category}
+              onChange={handleChange}
+              placeholder="e.g. Diagnostic & Imaging"
+            />
+          </div>
+        </div>
+
+        <div className="checkout-row">
+          <div className="field">
+            <label htmlFor="price">Price ($ USD)</label>
             <input
               id="price"
               name="price"
@@ -131,19 +172,18 @@ export default function AdminProductForm() {
               required
               value={form.price}
               onChange={handleChange}
-              placeholder="e.g. 250.00"
+              placeholder="e.g. 24500.00"
             />
           </div>
 
           <div className="field">
-            <label htmlFor="category">Category</label>
+            <label htmlFor="condition">Device Condition</label>
             <input
-              id="category"
-              name="category"
-              required
-              value={form.category}
+              id="condition"
+              name="condition"
+              value={form.condition}
               onChange={handleChange}
-              placeholder="e.g. Seating"
+              placeholder="e.g. Certified Refurbished"
             />
           </div>
         </div>

@@ -94,15 +94,15 @@ export default function AdminDashboard() {
     <div className="container admin-dashboard">
       <div className="admin-header">
         <div>
-          <p className="eyebrow">Admin Console</p>
-          <h1>Store Administration</h1>
+          <p className="eyebrow">DEX Compliance Console</p>
+          <h1>Exchange & Device Administration</h1>
         </div>
         <div className="admin-actions">
           <Link to="/admin/orders" className="btn secondary">
-            Manage Orders
+            Escrow Transactions
           </Link>
           <Link to="/admin/product/new" className="btn">
-            Add New Product
+            + Add Medical Device
           </Link>
         </div>
       </div>

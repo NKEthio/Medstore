@@ -57,23 +57,23 @@ export default function Signup() {
         <div className="auth-visual-side">
           <div className="auth-visual-overlay" />
           <div className="auth-visual-content">
-            <div className="auth-brand-badge">JOIN PROTECH</div>
-            <h2 className="auth-visual-title">Unlock Premium Tech Access.</h2>
+            <div className="auth-brand-badge">JOIN DEX EXCHANGE</div>
+            <h2 className="auth-visual-title">Direct Access to Certified Medical Equipment.</h2>
             <p className="auth-visual-desc">
-              Create an account to track orders, save wishlist items, and receive member-only drops.
+              Register your clinic, hospital, or biomedical practice to trade certified medical systems with verified buyers and sellers worldwide.
             </p>
             <div className="auth-features">
               <div className="auth-feature-pill">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
-                Instant 1-Click Google Sign Up
+                DEX SafeTrade Escrow Protection
               </div>
               <div className="auth-feature-pill">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
-                Priority Order Dispatch & Tracking
+                Zero-Fee Listing for Healthcare Facilities
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function Signup() {
         <div className="auth-form-side">
           <div className="auth-header">
             <h1>Create account</h1>
-            <p className="auth-subtitle">Join thousands of tech enthusiasts on Protech</p>
+            <p className="auth-subtitle">Join over 4,500 healthcare facilities trading on DEX</p>
           </div>
 
           <button

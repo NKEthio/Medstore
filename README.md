@@ -1,66 +1,56 @@
-# Field & Form — minimal React + Firebase store with Admin Panel
+# DEX — Peer-to-Peer Medical Device Exchange
 
-A small, fast e-commerce front end built with React 19 and Vite, backed by
-Firebase (Auth + Firestore). It features a full Admin Console to manage catalog products and track orders alongside standard shop views (catalog, cart, sign-in, order history, and checkout).
+**DEX** (Device Exchange) is the global peer-to-peer medical equipment marketplace — like Amazon for medical devices. Where sellers get buyers and buyers get the best devices at hospital surplus pricing with BioMed calibration verification and DEX SafeTrade Escrow protection.
+
+## Core Features
+
+- **P2P Medical Device Marketplace:** Hospitals, surgery centers, private practices, and certified biomedical refurbishers buy and sell diagnostic imaging, patient monitors, surgical towers, anesthesia machines, and laboratory analyzers directly.
+- **DEX SafeTrade Escrow:** 100% buyer protection. Funds are held in escrow until equipment arrives and completes a 48-hour clinical calibration and acceptance testing window.
+- **P2P Offers & Direct Negotiations:** Buyers can submit counter-offers with customized inspection terms and contingencies directly to sellers.
+- **P2P Device Listing Hub (`/sell`):** Healthcare facilities and liquidators can list surplus or pre-owned medical devices in under 2 minutes.
+- **Facility Activity Hub (`/orders`):** Comprehensive tracking of purchase orders, escrow releases, active P2P counter-offers, and seller listing management.
+- **BioMed Calibration & Inspection Requests:** Prospective buyers can request NIST calibration certificates, electrical safety pass reports, and maintenance logs directly from sellers.
+- **Compliance & Admin Console (`/admin`):** Review pending device submissions, manage clinical freight logistics, and update escrow transaction milestones.
 
 ## Stack
 
-- **React 19** + **Vite** — fast dev server, small production bundle
+- **React 19** + **Vite** — fast dev server and optimized production bundle
 - **react-router-dom** — client-side routing
-- **Firebase Auth** — email/password sign-in
-- **Firestore** — product catalog, user profiles, and orders
-- Cart state lives in `localStorage` via React Context (no server round-trip
-  needed just to add something to the cart)
+- **Firebase Auth & Firestore** — user authentication, device catalog, and escrow orders
+- **P2P Context & LocalStorage** — immediate local persistence of P2P listings, offers, and seller inquiries
 
-## Project structure
+## Project Structure
 
 ```
 src/
-  lib/firebase.js       Firebase app init — reads config from env vars
+  lib/
+    firebase.js         Firebase configuration & fallback preview mode
+    productCache.js     client-side caching for fast catalog loading
   context/
-    AuthContext.jsx      current user, login/signup/logout, admin privilege detection
-    CartContext.jsx       cart items, persisted to localStorage
+    AuthContext.jsx     authentication & clinical admin role verification
+    P2PContext.jsx      P2P medical device listings, offers, and inquiry management
+    CartContext.jsx     purchase order and escrow cart state
+    ThemeContext.jsx    dark / light theme provider
   components/
-    Navbar.jsx, ProductCard.jsx, ProtectedRoute.jsx
-    AdminRoute.jsx       restricts dashboard routes to authenticated admin users
+    Navbar.jsx          DEX branding, medical specialty dropdown, '+ List Device' CTA
+    ProductCard.jsx     medical device cards with condition, seller badge & escrow tag
+    ProtectedRoute.jsx  authenticated facility route guard
+    AdminRoute.jsx      compliance admin console guard
   pages/
-    Home.jsx              product grid, reads /products
-    ProductDetail.jsx     single product, reads /products/{id}
-    Cart.jsx
-    Checkout.jsx           writes a document to /orders
-    Login.jsx / Signup.jsx
-    Orders.jsx             a user's own orders, protected route
-    AdminDashboard.jsx     administrative product catalog overview and actions
-    AdminProductForm.jsx   add or edit catalog products
-    AdminOrders.jsx        administrative view of all store orders and order status updater
-firestore.rules          security rules to deploy alongside the app
-sample-products.json      a few sample documents for the products collection
+    Home.jsx            DEX hero banner, trust metrics, medical specialty filters
+    ProductDetail.jsx   clinical specs, verified seller profile, 'Make an Offer', escrow
+    SellDevice.jsx      P2P listing creation form for hospitals & clinics
+    Cart.jsx            DEX Escrow cart with inspection window terms
+    Checkout.jsx        clinical procurement checkout & SafeTrade Escrow agreement
+    Orders.jsx          facility hub (Escrow Orders, P2P Offers, My Listed Devices)
+    Login.jsx / Signup  clinical facility sign in & registration
+    AdminDashboard.jsx  compliance and device verification console
+    AdminProductForm.jsx add/edit medical equipment
+    AdminOrders.jsx     manage escrow transaction status & freight milestones
+sample-products.json    comprehensive medical equipment catalog across 7 specialties
 ```
 
-## 1. Set up Firebase
-
-1. Create a project at https://console.firebase.google.com
-2. Add a **Web app** (the `</>` icon) and copy the config values it gives you.
-3. Copy `.env.example` to `.env`, then fill in each `VITE_FIREBASE_*` value from
-   your Firebase config.
-4. In the console, enable:
-   - **Authentication -> Sign-in method -> Email/Password**
-   - **Firestore Database** (start in production mode)
-5. Deploy `firestore.rules` (or paste its contents into the Rules tab in the
-   console). It lets anyone read products, but restricts writing products, managing user profiles, or modifying order documents to authorized admin users.
-6. Add a few documents to a `products` collection so the home page has
-   something to show — `sample-products.json` has the shape to copy from
-   (`name`, `price` as a number, `description`, `category`, `image` URL).
-
-## 2. Set up Admin Privileges
-
-The application handles admin privileges securely through three fallback mechanisms. An admin can access `/admin`, manage the catalog, and update order statuses:
-
-1. **Bootstrap / Fallback Email:** Any registered user signing up or logging in with the emails `admin@medstore.com` or `admin@example.com` is automatically granted full admin rights on both the client side and inside Firestore security rules.
-2. **Firestore Users Collection:** When a user signs up, a profile document is created in the `users` collection in Firestore. Setting the `role` field to `"admin"` in a user's Firestore document (e.g. `/users/{uid}`) immediately grants admin privileges.
-3. **Custom Claims:** The application is also fully compatible with standard custom claims. Setting `{ admin: true }` or `{ role: "admin" }` on the user token result using the Firebase Admin SDK will securely activate admin features.
-
-## 3. Run it
+## Running the Application
 
 ```bash
 npm install
@@ -69,28 +59,9 @@ npm run dev
 
 Opens at `http://localhost:5173`.
 
-## 4. Build for production
+## Production Build
 
 ```bash
 npm run build
 ```
-
-Outputs static files to `dist/`. Deploy that folder anywhere that serves
-static files — Firebase Hosting is a natural fit since you're already on
-Firebase:
-
-```bash
-npm install -g firebase-tools
-firebase login
-firebase init hosting   # point it at the dist/ folder, configure as a SPA
-npm run build
-firebase deploy
-```
-
-## Notes on what's deliberately left out
-
-- **No payment processing.** `Checkout.jsx` writes an order to Firestore and
-  clears the cart — that's it. Wire in Stripe Checkout, Paddle, or your
-  processor of choice where the comment in that file marks the spot.
-  Payment logic belongs in a Cloud Function or your own backend, not in
-  client-side code.
+Outputs static files to `dist/`.

@@ -23,31 +23,43 @@ export default function Navbar({ onSearchClick }) {
       <div className="container nav-inner">
         <div className="nav-left">
           <Link to="/" className="nav-brand" onClick={closeMobileMenu}>
-            Protech
+            <div className="nav-logo-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2v20M2 12h20"/>
+                <circle cx="12" cy="12" r="9" strokeOpacity="0.4"/>
+              </svg>
+            </div>
+            <div className="nav-brand-text">
+              <span className="brand-title">DEX</span>
+              <span className="brand-badge-p2p">Device Exchange</span>
+            </div>
           </Link>
 
-          {/* Desktop Catalog Button */}
+          {/* Desktop Medical Categories Dropdown */}
           <div className="catalog-dropdown-wrapper desktop-only">
             <button
               type="button"
               className={`catalog-btn ${catalogOpen ? "active" : ""}`}
               onClick={() => setCatalogOpen(!catalogOpen)}
-              aria-label="Toggle Catalog Categories"
+              aria-label="Medical Specialties & Categories"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="3" y1="12" x2="21" y2="12"></line>
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <line x1="3" y1="18" x2="21" y2="18"></line>
               </svg>
-              Catalog
+              Specialties
             </button>
             {catalogOpen && (
               <div className="catalog-dropdown-menu" onClick={() => setCatalogOpen(false)}>
-                <Link to="/" className="dropdown-item">All Items</Link>
-                <Link to="/?category=Smartphones" className="dropdown-item">Smartphones</Link>
-                <Link to="/?category=Kitchen" className="dropdown-item">Kitchen Appliances</Link>
-                <Link to="/?category=Audio" className="dropdown-item">Audio & Headphones</Link>
-                <Link to="/?category=Game Console" className="dropdown-item">Game Consoles</Link>
+                <Link to="/" className="dropdown-item">All Medical Devices</Link>
+                <Link to="/?category=Diagnostic & Imaging" className="dropdown-item">Diagnostic & Imaging (Ultrasound / CT)</Link>
+                <Link to="/?category=Patient Monitoring & ICU" className="dropdown-item">Patient Monitoring & ICU</Link>
+                <Link to="/?category=Surgical & OR Equipment" className="dropdown-item">Surgical & OR Equipment</Link>
+                <Link to="/?category=Respiratory & Anesthesia" className="dropdown-item">Respiratory & Anesthesia</Link>
+                <Link to="/?category=Cardiology & Defibrillators" className="dropdown-item">Cardiology & Defibrillators</Link>
+                <Link to="/?category=Laboratory & Pathology" className="dropdown-item">Laboratory & Pathology</Link>
+                <Link to="/?category=Ophthalmic & Dental" className="dropdown-item">Ophthalmic & Dental</Link>
               </div>
             )}
           </div>
@@ -55,25 +67,37 @@ export default function Navbar({ onSearchClick }) {
           {/* Desktop Navigation Links */}
           <nav className="nav-main-links desktop-only">
             <NavLink to="/" end className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-              Bestsellers
+              Marketplace
             </NavLink>
-            <NavLink to="/?filter=sale" className="nav-item">
-              Sale
+            <NavLink to="/?condition=Certified Refurbished" className="nav-item">
+              BioMed Certified
             </NavLink>
-            <NavLink to="/?filter=new" className="nav-item">
-              New Arrivals
+            <NavLink to="/?condition=Hospital Surplus" className="nav-item">
+              Hospital Surplus
+            </NavLink>
+            <NavLink to="/orders" className="nav-item">
+              P2P Offers & Activity
             </NavLink>
           </nav>
         </div>
 
         <div className="nav-right">
+          {/* Prominent Sell / List Medical Device Button */}
+          <Link to="/sell" className="nav-sell-btn desktop-only">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            List a Device
+          </Link>
+
           {onSearchClick && (
             <button
               type="button"
               className="nav-icon-btn"
               onClick={onSearchClick}
-              title="Search products"
-              aria-label="Search products"
+              title="Search medical devices"
+              aria-label="Search medical devices"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8"></circle>
@@ -108,30 +132,30 @@ export default function Navbar({ onSearchClick }) {
             )}
           </button>
 
-          <Link to="/cart" className="nav-cart-btn">
+          <Link to="/cart" className="nav-cart-btn" title="Purchase Order Cart">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
-            <span className="desktop-only">Cart</span>
+            <span className="desktop-only">Escrow Cart</span>
             {count > 0 && <span className="cart-badge-count">{count}</span>}
           </Link>
 
           {isAdmin && (
             <Link to="/admin" className="admin-badge-btn desktop-only">
-              Admin
+              Compliance Admin
             </Link>
           )}
 
           {user ? (
             <div className="user-menu-wrapper desktop-only">
               <Link to="/orders" className="nav-user-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>Account</span>
+                <span>Facility Hub</span>
               </Link>
               <button
                 type="button"
@@ -147,11 +171,11 @@ export default function Navbar({ onSearchClick }) {
             </div>
           ) : (
             <Link to="/login" className="nav-user-btn desktop-only">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
-              <span>Log in</span>
+              <span>Sign in</span>
             </Link>
           )}
 
@@ -184,7 +208,7 @@ export default function Navbar({ onSearchClick }) {
         <div className="mobile-drawer-overlay" onClick={closeMobileMenu}>
           <div className="mobile-drawer-content" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-drawer-header">
-              <span className="mobile-drawer-title">Navigation</span>
+              <span className="mobile-drawer-title">DEX Exchange</span>
               <button
                 type="button"
                 className="mobile-drawer-close"
@@ -196,48 +220,63 @@ export default function Navbar({ onSearchClick }) {
             </div>
 
             <div className="mobile-drawer-section">
+              <Link to="/sell" className="mobile-sell-btn" onClick={closeMobileMenu}>
+                + List Medical Equipment
+              </Link>
+            </div>
+
+            <div className="mobile-drawer-section">
               <span className="mobile-section-label">Browse</span>
               <NavLink to="/" end className="mobile-nav-link" onClick={closeMobileMenu}>
-                Bestsellers
+                All Medical Devices
               </NavLink>
-              <NavLink to="/?filter=sale" className="mobile-nav-link" onClick={closeMobileMenu}>
-                Sale Items
+              <NavLink to="/?condition=Certified Refurbished" className="mobile-nav-link" onClick={closeMobileMenu}>
+                BioMed Certified
               </NavLink>
-              <NavLink to="/?filter=new" className="mobile-nav-link" onClick={closeMobileMenu}>
-                New Arrivals
+              <NavLink to="/?condition=Hospital Surplus" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Hospital Surplus
+              </NavLink>
+              <NavLink to="/orders" className="mobile-nav-link" onClick={closeMobileMenu}>
+                My P2P Offers & Orders
               </NavLink>
             </div>
 
             <div className="mobile-drawer-section">
-              <span className="mobile-section-label">Categories</span>
-              <Link to="/" className="mobile-nav-link" onClick={closeMobileMenu}>
-                All Categories
+              <span className="mobile-section-label">Medical Specialties</span>
+              <Link to="/?category=Diagnostic & Imaging" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Diagnostic & Imaging
               </Link>
-              <Link to="/?category=Smartphones" className="mobile-nav-link" onClick={closeMobileMenu}>
-                Smartphones
+              <Link to="/?category=Patient Monitoring & ICU" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Patient Monitoring & ICU
               </Link>
-              <Link to="/?category=Kitchen" className="mobile-nav-link" onClick={closeMobileMenu}>
-                Kitchen Appliances
+              <Link to="/?category=Surgical & OR Equipment" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Surgical & OR Equipment
               </Link>
-              <Link to="/?category=Audio" className="mobile-nav-link" onClick={closeMobileMenu}>
-                Audio & Headphones
+              <Link to="/?category=Respiratory & Anesthesia" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Respiratory & Anesthesia
               </Link>
-              <Link to="/?category=Game Console" className="mobile-nav-link" onClick={closeMobileMenu}>
-                Game Consoles
+              <Link to="/?category=Cardiology & Defibrillators" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Cardiology & Defibrillators
+              </Link>
+              <Link to="/?category=Laboratory & Pathology" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Laboratory & Pathology
+              </Link>
+              <Link to="/?category=Ophthalmic & Dental" className="mobile-nav-link" onClick={closeMobileMenu}>
+                Ophthalmic & Dental
               </Link>
             </div>
 
             <div className="mobile-drawer-section mobile-account-section">
-              <span className="mobile-section-label">Account</span>
+              <span className="mobile-section-label">Facility Account</span>
               {isAdmin && (
                 <Link to="/admin" className="mobile-nav-link admin-highlight" onClick={closeMobileMenu}>
-                  Admin Dashboard
+                  Compliance Admin Console
                 </Link>
               )}
               {user ? (
                 <>
                   <Link to="/orders" className="mobile-nav-link" onClick={closeMobileMenu}>
-                    My Orders & Profile
+                    Facility Orders & Offers
                   </Link>
                   <button
                     type="button"
@@ -253,7 +292,7 @@ export default function Navbar({ onSearchClick }) {
                 </>
               ) : (
                 <Link to="/login" className="mobile-login-btn" onClick={closeMobileMenu}>
-                  Sign In / Register
+                  Sign In / Register Clinic
                 </Link>
               )}
             </div>

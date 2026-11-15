@@ -68,20 +68,20 @@ export default function AdminOrders() {
     <div className="container admin-orders">
       <div className="admin-header">
         <div>
-          <p className="eyebrow">Admin Console</p>
-          <h1>Manage Orders</h1>
+          <p className="eyebrow">DEX Escrow Management</p>
+          <h1>Escrow Transactions & Freight Tracking</h1>
         </div>
       </div>
 
       {orders.length === 0 ? (
-        <p className="home-state">No orders have been placed yet.</p>
+        <p className="home-state">No equipment orders have been placed yet.</p>
       ) : (
         <div className="admin-orders-list">
           {orders.map((order) => (
             <div className="admin-order-card" key={order.id}>
               <div className="admin-order-card-header">
                 <div>
-                  <p className="admin-order-id">Order #{order.id}</p>
+                  <p className="admin-order-id">PO #{order.id}</p>
                   <p className="admin-order-date">
                     {order.createdAt
                       ? new Date(order.createdAt.seconds * 1000).toLocaleString()
@@ -91,14 +91,14 @@ export default function AdminOrders() {
                 <div className="admin-order-actions">
                   <select
                     className="admin-status-select"
-                    value={order.status || "placed"}
+                    value={order.status || "Escrow Funded"}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
                   >
-                    <option value="placed">Placed</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="Escrow Funded">Escrow Funded</option>
+                    <option value="In Transit (Medical Freight)">In Transit (Medical Freight)</option>
+                    <option value="Delivered (48h Inspection)">Delivered (48h Inspection)</option>
+                    <option value="Accepted & Escrow Released">Accepted & Escrow Released</option>
+                    <option value="Cancelled / Refunded">Cancelled / Refunded</option>
                   </select>
                   <button
                     onClick={() => handleDeleteOrder(order.id)}

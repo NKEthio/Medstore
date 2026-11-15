@@ -51,23 +51,23 @@ export default function Login() {
         <div className="auth-visual-side">
           <div className="auth-visual-overlay" />
           <div className="auth-visual-content">
-            <div className="auth-brand-badge">PROTECH STORE</div>
-            <h2 className="auth-visual-title">Welcome Back to Next-Gen Tech.</h2>
+            <div className="auth-brand-badge">DEX MEDICAL EXCHANGE</div>
+            <h2 className="auth-visual-title">The Peer-to-Peer Medical Device Exchange.</h2>
             <p className="auth-visual-desc">
-              Sign in to manage your orders, access exclusive deals, and track your high-performance hardware.
+              Where sellers get buyers and buyers get the best devices. Protected by DEX SafeTrade Escrow and BioMed calibration standards.
             </p>
             <div className="auth-features">
               <div className="auth-feature-pill">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
-                Instant 1-Click Google Sign In
+                100% SafeTrade Escrow Protection
               </div>
               <div className="auth-feature-pill">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
-                Secure 256-Bit Encrypted Sessions
+                4,500+ Verified Clinical Facilities
               </div>
             </div>
           </div>
@@ -77,7 +77,7 @@ export default function Login() {
         <div className="auth-form-side">
           <div className="auth-header">
             <h1>Sign in</h1>
-            <p className="auth-subtitle">Enter your credentials to access your Protech account</p>
+            <p className="auth-subtitle">Enter your clinical credentials to access your DEX account</p>
           </div>
 
           <button

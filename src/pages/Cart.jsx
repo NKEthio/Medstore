@@ -24,10 +24,10 @@ export default function Cart() {
               d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
             />
           </svg>
-          <h2>Your cart is empty</h2>
-          <p>Explore our curation of considered goods to find everyday essentials.</p>
-          <Link to="/" className="btn" style={{ marginTop: 24 }}>
-            Continue shopping
+          <h2>Your Escrow Cart is Empty</h2>
+          <p>Explore certified medical devices, hospital surplus, and pre-owned clinical systems on DEX.</p>
+          <Link to="/" className="btn-primary" style={{ marginTop: 24 }}>
+            Explore Medical Devices
           </Link>
         </div>
       </div>
@@ -36,7 +36,12 @@ export default function Cart() {
 
   return (
     <div className="container cart">
-      <h1>Your cart</h1>
+      <div className="cart-header-title-row">
+        <h1>DEX Escrow Cart</h1>
+        <span className="cart-badge-escrow">
+          🛡️ Protected by DEX SafeTrade Escrow
+        </span>
+      </div>
 
       <div className="cart-layout">
         {/* Left: Items list */}
@@ -52,9 +57,12 @@ export default function Cart() {
                   )}
                 </div>
                 <div className="cart-row-info">
-                  <span className="cart-row-category">{item.category || "Shop"}</span>
+                  <span className="cart-row-category">{item.brand || "Medical Hardware"}</span>
                   <p className="cart-row-name">{item.name}</p>
-                  <p className="cart-row-price">${item.price.toFixed(2)} each</p>
+                  <span className="cart-row-warranty">🛡️ BioMed Inspection Guaranteed</span>
+                  <p className="cart-row-price">
+                    ${item.price?.toLocaleString("en-US", { minimumFractionDigits: 2 })} each
+                  </p>
                 </div>
 
                 <div className="qty-controls">
@@ -85,7 +93,7 @@ export default function Cart() {
                 </div>
 
                 <p className="cart-row-total">
-                  ${(item.price * item.qty).toFixed(2)}
+                  ${(item.price * item.qty).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                 </p>
 
                 <button
@@ -98,41 +106,64 @@ export default function Cart() {
                     stroke="currentColor"
                     strokeWidth="2"
                     viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    style={{ width: 18, height: 18 }}
-                    aria-hidden="true"
+                    width="18"
+                    height="18"
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      d="M6 18L18 6M6 6l12 12"
                     />
                   </svg>
                 </button>
               </div>
             ))}
           </div>
+
+          {/* DEX Escrow Callout in Cart */}
+          <div className="cart-escrow-notice">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+            <div>
+              <strong>DEX SafeTrade Escrow Included:</strong> Your clinical payment will not be released to the seller until your facility accepts delivery and completes the 48-hour calibration inspection.
+            </div>
+          </div>
         </div>
 
-        {/* Right: Order Summary Card */}
-        <div className="cart-summary-card">
-          <h2>Order Summary</h2>
-          <div className="summary-row">
-            <span>Items Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
-          </div>
-          <div className="summary-row">
-            <span>Shipping</span>
-            <span>Calculated at checkout</span>
-          </div>
-          <div className="summary-row total">
-            <span>Estimated Total</span>
-            <span>${subtotal.toFixed(2)}</span>
-          </div>
+        {/* Right: Order Summary */}
+        <div className="cart-summary-section">
+          <div className="cart-summary-card">
+            <h2>Order Summary</h2>
+            <div className="summary-row">
+              <span>Medical Equipment Subtotal</span>
+              <span>${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+            </div>
+            <div className="summary-row">
+              <span>Pallet Freight & Insurance</span>
+              <span className="free-freight">Calculated at Checkout</span>
+            </div>
+            <div className="summary-row">
+              <span>DEX Escrow Fee</span>
+              <span className="free-freight">Covered by DEX</span>
+            </div>
+            <div className="summary-divider" />
+            <div className="summary-row total-row">
+              <span>Estimated Total</span>
+              <span className="summary-total-price">
+                ${subtotal.toLocaleString("en-US", { minimumFractionDigits: 2 })} USD
+              </span>
+            </div>
 
-          <Link to="/checkout" className="btn cart-checkout-btn">
-            Proceed to Checkout
-          </Link>
+            <Link to="/checkout" className="btn-primary checkout-btn">
+              Proceed to Clinical Escrow Checkout
+            </Link>
+
+            <Link to="/" className="btn-secondary continue-shopping-btn">
+              Continue Browsing Devices
+            </Link>
+          </div>
         </div>
       </div>
     </div>

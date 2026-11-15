@@ -1,55 +1,78 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root, [data-theme="dark"] {
-  --bg: #0b0c0e;
-  --bg-surface: #121316;
-  --card-bg: #16171a;
-  --card-bg-hover: #1c1d22;
-  --card-border: #23252b;
-  --accent: #d4ff00;
-  --accent-hover: #c0ea00;
-  --accent-ink: #0b0c0e;
-  --ink: #ffffff;
-  --ink-muted: #9ca3af;
-  --ink-subtle: #6b7280;
-  --chip-bg: #1a1b1f;
-  --chip-border: #282a32;
-  --chip-active: #2d2f38;
-  --line: #22242a;
-  --badge-yellow: #d4ff00;
+  --bg: #090e17;
+  --bg-surface: #0f1623;
+  --card-bg: #141c2c;
+  --card-bg-hover: #1a253a;
+  --card-border: #1e2c44;
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-light: #38bdf8;
+  --accent-ink: #ffffff;
+  --accent-glow: rgba(2, 132, 199, 0.25);
+  
+  --emerald: #10b981;
+  --emerald-bg: rgba(16, 185, 129, 0.12);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245, 158, 11, 0.12);
+  --blue-tag: #38bdf8;
+  --blue-tag-bg: rgba(56, 189, 248, 0.12);
+
+  --ink: #f8fafc;
+  --ink-muted: #94a3b8;
+  --ink-subtle: #64748b;
+  --chip-bg: #131c2d;
+  --chip-border: #22324e;
+  --chip-active: #0284c7;
+  --line: #1e293b;
+  --badge-yellow: #f59e0b;
   --badge-yellow-ink: #000000;
-  --radius: 16px;
+  
+  --radius: 12px;
   --radius-sm: 8px;
   --radius-full: 9999px;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.4);
-  --font-display: "Space Grotesk", -apple-system, sans-serif;
-  --font-body: "Inter", -apple-system, sans-serif;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.5);
+  
+  --font-display: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="light"] {
-  --bg: #f4f5f8;
+  --bg: #f8fafc;
   --bg-surface: #ffffff;
   --card-bg: #ffffff;
-  --card-bg-hover: #f9fafb;
-  --card-border: #e4e7ec;
-  --accent: #d4ff00;
-  --accent-hover: #c0ea00;
-  --accent-ink: #0b0c0e;
+  --card-bg-hover: #f1f5f9;
+  --card-border: #e2e8f0;
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-light: #0ea5e9;
+  --accent-ink: #ffffff;
+  --accent-glow: rgba(2, 132, 199, 0.15);
+
+  --emerald: #059669;
+  --emerald-bg: rgba(5, 150, 105, 0.1);
+  --amber: #d97706;
+  --amber-bg: rgba(217, 119, 6, 0.1);
+  --blue-tag: #0284c7;
+  --blue-tag-bg: rgba(2, 132, 199, 0.08);
+
   --ink: #0f172a;
   --ink-muted: #475569;
-  --ink-subtle: #94a3b8;
-  --chip-bg: #eef1f5;
+  --ink-subtle: #64748b;
+  --chip-bg: #f1f5f9;
   --chip-border: #cbd5e1;
-  --chip-active: #e2e8f0;
+  --chip-active: #0284c7;
   --line: #e2e8f0;
-  --badge-yellow: #d4ff00;
-  --badge-yellow-ink: #000000;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+  --badge-yellow: #d97706;
+  --badge-yellow-ink: #ffffff;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -130,20 +153,21 @@ p {
   padding: 0 24px;
 }
 
-/* Custom Buttons */
+/* Custom Primary & Secondary Buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 28px;
+  padding: 12px 24px;
   background: var(--accent);
   color: var(--accent-ink);
   border: none;
-  border-radius: var(--radius-full);
-  font-weight: 700;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
   font-size: 15px;
   transition: var(--transition);
+  box-shadow: 0 4px 12px var(--accent-glow);
 }
 
 .btn-primary:hover {
@@ -156,29 +180,77 @@ p {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 28px;
+  padding: 12px 24px;
   background: var(--chip-bg);
   color: var(--ink);
   border: 1px solid var(--card-border);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 15px;
   transition: var(--transition);
 }
 
 .btn-secondary:hover {
-  background: var(--chip-active);
+  background: var(--card-bg-hover);
   border-color: var(--ink-subtle);
 }
 
-/* Common Badge */
-.badge-sale {
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 700;
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
+.btn-outline-accent {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.btn-outline-accent:hover {
+  background: rgba(2, 132, 199, 0.1);
+}
+
+/* Badges */
+.badge-sale {
+  background: var(--blue-tag-bg);
+  color: var(--blue-tag);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-weight: 700;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.badge-verified {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-weight: 700;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-escrow {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  font-weight: 700;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
